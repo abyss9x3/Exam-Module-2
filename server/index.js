@@ -16,7 +16,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const user = require('./routes/user');
 
 // Establish Connection to Database
-const { connectDB } = require('./DataBase');
+const { connectDB } = require('./database');
 connectDB();
 
 // parse json request body
@@ -40,13 +40,13 @@ app.use('/api/user', user);
 
 
 // Serve Static Assets In Production
-// if (process.env.NODE_ENV === "production") {
-// Set Static Folder
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-);
-// }
+if (process.env.NODE_ENV === "production") {
+    // Set Static Folder
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.get('*', (req, res) =>
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    );
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
