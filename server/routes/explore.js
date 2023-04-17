@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { loggingMiddleware } = require('../middlewares');
+const { loggingMiddleware, authValidator } = require('../middlewares');
 const {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers, getDepartmentTable,
@@ -11,28 +11,28 @@ const {
 
 // /api/explore
 router
-    .get('/deptNames', loggingMiddleware, getDeptNames)
-    .post('/deptNames', loggingMiddleware, postDeptNames)
+    .get('/deptNames', loggingMiddleware, authValidator, getDeptNames)
+    .post('/deptNames', loggingMiddleware, authValidator, postDeptNames)
 
-    .get('/deptTableWithoutExaminers', loggingMiddleware, getDeptTableWithoutExaminers)
-    .post('/deptTableWithoutExaminers', loggingMiddleware, postDeptTableWithoutExaminers)
+    .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, getDeptTableWithoutExaminers)
+    .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, postDeptTableWithoutExaminers)
 
-    .get('/departmentTable', loggingMiddleware, getDepartmentTable)
-    .post('/departmentTable', loggingMiddleware, postDepartmentTable)
+    .get('/departmentTable', loggingMiddleware, authValidator, getDepartmentTable)
+    .post('/departmentTable', loggingMiddleware, authValidator, postDepartmentTable)
 
-    .post('/commitRow', loggingMiddleware, commitRow)
+    .post('/commitRow', loggingMiddleware, authValidator, commitRow)
 
-    .get('/deptStatus', loggingMiddleware, getDeptStatus)
-    .post('/deptStatus', loggingMiddleware, postDeptStatus)
+    .get('/deptStatus', loggingMiddleware, authValidator, getDeptStatus)
+    .post('/deptStatus', loggingMiddleware, authValidator, postDeptStatus)
 
-    .get('/approval1', loggingMiddleware, getApproval1)
-    .put('/approval1', loggingMiddleware, putApproval1)
+    .get('/approval1', loggingMiddleware, authValidator, getApproval1)
+    .put('/approval1', loggingMiddleware, authValidator, putApproval1)
 
-    .get('/approval2', loggingMiddleware, getApproval2)
-    .put('/approval2', loggingMiddleware, putApproval2)
+    .get('/approval2', loggingMiddleware, authValidator, getApproval2)
+    .put('/approval2', loggingMiddleware, authValidator, putApproval2)
 
-    .get('/excellSheet', loggingMiddleware, getExcellSheet)
+    .get('/excellSheet', loggingMiddleware, authValidator, getExcellSheet)
 
-    .delete('/', loggingMiddleware, clearDatabase);
+    .delete('/', loggingMiddleware, authValidator, clearDatabase);
 
 module.exports = router;
