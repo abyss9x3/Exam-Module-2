@@ -82,9 +82,18 @@ const getApproval2 = async deptName => { }
 
 const putApproval2 = async deptName => { }
 
-const getExcellSheet = async () => { }
+const getExcellSheet = async () => {
+    // return [ { id, SubNomenclature, SubCode, ExamCode, Template, Examiner1_email, Examiner1_name, Examiner1_contactno, Examiner2_email, Examiner2_name, Examiner2_contactno, Syllabus, deptName } ]
+    // imp: above order is necessary here !
+}
 
 const clearDatabase = async () => { }
+
+const getAllExaminers = async () => {
+    // get all entries of Examiner 1 and Examiner 2 and merge then in single array and return it.
+    // return [ { email, name, contactno } ]
+}
+
 
 module.exports = {
     connectDB,
@@ -92,7 +101,8 @@ module.exports = {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers, getDepartmentTable,
     postDepartmentTable, commitRow, getDeptStatus,
-    postDeptStatus, getApproval1, putApproval1, getApproval2,
-    putApproval2, getExcellSheet, clearDatabase
+    postDeptStatus, getApproval1, putApproval1,
+    getApproval2, putApproval2, getExcellSheet,
+    clearDatabase, getAllExaminers
 }
 
