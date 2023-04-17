@@ -43,11 +43,27 @@ const postDeptNames = async deptNames => {
     await sqlDatabase.execute(`insert into exam_subcommitee values ${str}`);
 }
 
+const getDeptTableWithoutExaminers = async () => {
+    const [rows] = await sqlDatabase.execute('select Id, SubNomenclature, SubCode, Template from Exam_Module')
+    console.log(rows)
+    return rows
+}
 
+
+const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
+    // [{id, SubNomenclature, SubCode, Template}]
+    let str = `("${tableData[0].id}", "${tableData[0].SubNomenclature}", "${tableData[0].SubCode}", "${tableData[0].Template}", "${deptName}")`;
+    for (let i = 1; i < tableData.length; ++i) {
+        str = `${str}, ("${tableData[i].id}", "${tableData[i].SubNomenclature}", "${tableData[i].SubCode}", "${tableData[i].Template}", "${deptName}")`
+    }
+    await sqlDatabase.execute(`delete from Exam_Module where DeptName="${deptName}"`)
+    await sqlDatabase.execute(`insert into Exam_Module (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
+}
 module.exports = {
     connectDB,
     User: { createNewUser, getUserById, findOneUser },
-    getDeptNames, postDeptNames
+    getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
+    postDeptTableWithoutExaminers,
 }
 
 
