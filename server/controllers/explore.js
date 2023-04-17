@@ -1,32 +1,140 @@
-const getDeptNames = async (req, res) => { }
+const database = require('../database');
 
-const postDeptNames = async (req, res) => { }
+const getDeptNames = async (req, res) => {
+    try {
+        const deptNames = await database.getDeptNames();
+        res.status(200).json(deptNames);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const getDeptTableWithoutExaminers = async (req, res) => { }
+const postDeptNames = async (req, res) => {
+    try {
+        // const 
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const postDeptTableWithoutExaminers = async (req, res) => { }
+const getDeptTableWithoutExaminers = async (req, res) => {
+    try {
 
-const getDepartmentTable = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const postDepartmentTable = async (req, res) => { }
+const postDeptTableWithoutExaminers = async (req, res) => {
+    try {
 
-const commitRow = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const getDeptStatus = async (req, res) => { }
+const getDepartmentTable = async (req, res) => {
+    try {
 
-const postDeptStatus = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const getApproval1 = async (req, res) => { }
+const postDepartmentTable = async (req, res) => {
+    try {
 
-const putApproval1 = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const getApproval2 = async (req, res) => { }
+const commitRow = async (req, res) => {
+    try {
 
-const putApproval2 = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
-const getExcellSheet = async (req, res) => { }
+const getDeptStatus = async (req, res) => {
+    try {
 
-const clearDatabase = async (req, res) => { }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const postDeptStatus = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const getApproval1 = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const putApproval1 = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const getApproval2 = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const putApproval2 = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const getExcellSheet = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const clearDatabase = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
 
 module.exports = {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,

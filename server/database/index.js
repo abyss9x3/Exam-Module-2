@@ -13,8 +13,11 @@ const findOneUser = async filter => {
     return {};
 }
 
+// all other database queries
+const getDeptNames = async () => { }
 
 module.exports = {
     connectDB,
-    User: { createNewUser, getUserById, findOneUser }
+    User: { createNewUser, getUserById, findOneUser },
+    getDeptNames,
 }
