@@ -14,6 +14,7 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 
 const user = require('./routes/user');
+const explore = require('./routes/explore');
 
 // Establish Connection to Database
 const { connectDB } = require('./database');
@@ -37,6 +38,8 @@ app.use(rateLimit({
 
 // api route for user login and register
 app.use('/api/user', user);
+// api route for all interaction between client and server after login/signup
+app.use('/api/explore', explore);
 
 
 // Serve Static Assets In Production
