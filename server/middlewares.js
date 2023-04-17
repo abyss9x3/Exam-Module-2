@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 const { User } = require('./database');
+const { HOD, MEMBER } = require("./database/types");
 
 const loginValidator = async (req, res, next) => {
 
@@ -113,25 +114,34 @@ const authValidator = (req, res, next) => {
         req.email = verified.email;
         req.designation = verified.designation;
 
+        // only for members and hods
+        if (verified.deptName) {
+            req.deptName = verified.deptName;
+        }
+
         next();
-    } catch (err) {
-        console.error(err);
-        res.status(403).json({ error: "Unauthenticated" });
+    } catch (error) {
+        console.error(error);
+        res.status(403).json({ error: `Unauthenticated, ${error}` });
     }
 }
 
 // create and return a middleware
 const authorizationHandler = authorizedUsersList => {
+    // this middleware check if user is in authorizedUserList and is in authorized department
     return (req, res, next) => {
         try {
             const designation = req.designation;
-            if (designation && authorizedUsersList.includes(designation)) {
-                next();
-            } else {
-                res.status(401).json({ error: "Unauthorized" });
+            if (!designation || !authorizedUsersList.includes(designation))
+                throw new Error("This designation is not authorized");
+            // for Members and HODs
+            if ([HOD, MEMBER].includes(designation)) {
+                const deptName = (req.query && req.query.deptName) || (req.body && req.body.deptName);
+                if (req.deptName !== deptName) throw new Error("This action is not authorized by this Department");
             }
+            next();
         } catch (error) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: `Unauthorized, ${error}` });
         }
     }
 }
