@@ -98,20 +98,41 @@ const registerValidator = async (req, res, next) => {
     }
 }
 
+const deleteUserValidator = async (req, res, next) => {
+    next();
+}
+
 const authValidator = (req, res, next) => {
     try {
-        if (!req.cookies || !req.cookies.token) return res.status(401).json({ error: "Unauthorized" });
+        if (!req.cookies || !req.cookies.token) return res.status(403).json({ error: "Unauthenticated" });
 
         const token = req.cookies.token;
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verified.user;
+        req.name = verified.name;
         req.loginid = verified.loginid;
         req.email = verified.email;
+        req.designation = verified.designation;
 
         next();
     } catch (err) {
         console.error(err);
-        res.status(401).json({ error: "Unauthorized" });
+        res.status(403).json({ error: "Unauthenticated" });
+    }
+}
+
+// create and return a middleware
+const authorizationHandler = authorizedUsersList => {
+    return (req, res, next) => {
+        try {
+            const designation = req.designation;
+            if (designation && authorizedUsersList.includes(designation)) {
+                next();
+            } else {
+                res.status(401).json({ error: "Unauthorized" });
+            }
+        } catch (error) {
+            res.status(401).json({ error: "Unauthorized" });
+        }
     }
 }
 
@@ -120,11 +141,8 @@ const loggingMiddleware = (req, res, next) => {
     next();
 }
 
-const deleteUserValidator = async (req, res, next) => {
-    next();
-}
 
 module.exports = {
     loginValidator, registerValidator, authValidator,
-    loggingMiddleware, deleteUserValidator
+    loggingMiddleware, deleteUserValidator, authorizationHandler
 };
