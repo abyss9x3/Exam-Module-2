@@ -18,6 +18,6 @@ router.post('/login', loggingMiddleware, loginValidator, loginController);
 router.post('/register', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), registerValidator, registerController);
 router.get('/logout', loggingMiddleware, logoutController);
 router.get('/loggedIn', loggingMiddleware, loggedInController);
-router.delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), deleteUserValidator, deleteUserController);
+router.delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), deleteUserController);
 
 module.exports = router;

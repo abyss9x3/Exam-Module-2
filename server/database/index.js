@@ -17,14 +17,12 @@ const connectDB = async () => {
 }
 
 // User
-const createNewUser = async ({ name, loginid, email, passwordHash, entity }) => {
+const createNewUser = async ({ name, loginid, passwordHash, entity }) => {
 }
 const getUserById = async loginid => {
     return {};
 }
-const findOneUser = async filter => {
-    // don't write its code !
-    return {};
+const deleteUser = async loginid => {
 }
 
 // all other database queries
@@ -49,7 +47,6 @@ const getDeptTableWithoutExaminers = async () => {
     return rows
 }
 
-
 const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     // [{id, SubNomenclature, SubCode, Template}]
     let str = `("${tableData[0].id}", "${tableData[0].SubNomenclature}", "${tableData[0].SubCode}", "${tableData[0].Template}", "${deptName}")`;
@@ -59,11 +56,11 @@ const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     await sqlDatabase.execute(`delete from Exam_Module where DeptName="${deptName}"`)
     await sqlDatabase.execute(`insert into Exam_Module (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
 }
+
 module.exports = {
     connectDB,
-    User: { createNewUser, getUserById, findOneUser },
+    User: { createNewUser, getUserById, deleteUser },
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers,
 }
-
 
