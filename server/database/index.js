@@ -41,14 +41,13 @@ const postDeptNames = async deptNames => {
     await sqlDatabase.execute(`insert into exam_subcommitee values ${str}`);
 }
 
-const getDeptTableWithoutExaminers = async () => {
-    const [rows] = await sqlDatabase.execute('select Id, SubNomenclature, SubCode, Template from Exam_Module')
-    console.log(rows)
-    return rows
+const getDeptTableWithoutExaminers = async deptName => {
+    const [rows] = await sqlDatabase.execute(`select Id, SubNomenclature, SubCode, Template from Exam_Module where deptName="${deptName}"`)
+    return rows;
 }
 
 const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
-    // [{id, SubNomenclature, SubCode, Template}]
+    // tableData = [ { id, SubNomenclature, SubCode, Template } ]
     let str = `("${tableData[0].id}", "${tableData[0].SubNomenclature}", "${tableData[0].SubCode}", "${tableData[0].Template}", "${deptName}")`;
     for (let i = 1; i < tableData.length; ++i) {
         str = `${str}, ("${tableData[i].id}", "${tableData[i].SubNomenclature}", "${tableData[i].SubCode}", "${tableData[i].Template}", "${deptName}")`
@@ -57,10 +56,43 @@ const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     await sqlDatabase.execute(`insert into Exam_Module (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
 }
 
+const getDepartmentTable = async deptName => { }
+
+const postDepartmentTable = async ({ tableData, deptName }) => {
+    // tableData = [ { id, SubNomenclature, SubCode, Template, Examiner1, Examiner2, Syllabus } ]
+    // Examiner1 = { Email, Name, ContactNo }
+    // Examiner2 = { Email, Name, ContactNo }
+}
+
+const commitRow = async ({ deptName, rowData, memberName, memberLoginId }) => {
+    // rowData = { id, SubNomenclature, SubCode, Template, Examiner1, Examiner2, Syllabus }
+    // Examiner1 = { Email, Name, ContactNo }
+    // Examiner2 = { Email, Name, ContactNo }
+}
+
+const getDeptStatus = async deptName => { }
+
+const postDeptStatus = async deptName => { }
+
+const getApproval1 = async deptName => { }
+
+const putApproval1 = async deptName => { }
+
+const getApproval2 = async deptName => { }
+
+const putApproval2 = async deptName => { }
+
+const getExcellSheet = async () => { }
+
+const clearDatabase = async () => { }
+
 module.exports = {
     connectDB,
     User: { createNewUser, getUserById, deleteUser },
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
-    postDeptTableWithoutExaminers,
+    postDeptTableWithoutExaminers, getDepartmentTable,
+    postDepartmentTable, commitRow, getDeptStatus,
+    postDeptStatus, getApproval1, putApproval1, getApproval2,
+    putApproval2, getExcellSheet, clearDatabase
 }
 

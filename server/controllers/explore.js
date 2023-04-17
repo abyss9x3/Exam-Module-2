@@ -12,7 +12,11 @@ const getDeptNames = async (req, res) => {
 
 const postDeptNames = async (req, res) => {
     try {
-        // const 
+        if (!req.body || !req.body.deptNames) {
+            res.status(400).json("deptNames array is missing in req body !");
+        }
+        await database.postDeptNames(req.body.deptNames);
+        res.status(200).json("Done");
     } catch (error) {
         console.log(error);
         res.status(400).json(error);
@@ -21,7 +25,11 @@ const postDeptNames = async (req, res) => {
 
 const getDeptTableWithoutExaminers = async (req, res) => {
     try {
-
+        if (!req.query || !req.query.deptName) {
+            res.status(400).json("deptName is missing in req query !");
+        }
+        const deptTableData = await database.getDeptTableWithoutExaminers(deptName);
+        res.status(200).json(deptTableData);
     } catch (error) {
         console.log(error);
         res.status(400).json(error);
@@ -30,7 +38,11 @@ const getDeptTableWithoutExaminers = async (req, res) => {
 
 const postDeptTableWithoutExaminers = async (req, res) => {
     try {
-
+        if (!req.body || !req.body.tableData || !req.body.deptName) {
+            res.status(400).json("deptName or tableData is missing in req body !");
+        }
+        await database.postDeptTableWithoutExaminers({ tableData, deptName });
+        res.status(200).json("Done");
     } catch (error) {
         console.log(error);
         res.status(400).json(error);
