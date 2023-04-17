@@ -12,6 +12,7 @@ const {
     deleteUserController
 } = require('../controllers/user');
 
+// /api/user
 router.post('/login', loggingMiddleware, loginValidator, loginController);
 router.post('/register', loggingMiddleware, registerValidator, registerController);
 router.get('/logout', loggingMiddleware, logoutController);

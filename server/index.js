@@ -11,10 +11,8 @@ const path = require('path');
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
 
-const user = require('./routes/user');
-const explore = require('./routes/explore');
+const { explore, user } = require('./routes');
 
 // Establish Connection to Database
 const { connectDB } = require('./database');
@@ -27,7 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Security
 app.use(cors({ origin: true, credentials: true }));
-app.use(mongoSanitize());
 app.use(hpp());
 app.use(helmet());
 app.use(rateLimit({
