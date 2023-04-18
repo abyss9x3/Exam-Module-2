@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { loggingMiddleware, authValidator } = require('../middlewares');
+const { loggingMiddleware, authValidator, authorizationHandler } = require('../middlewares');
 const {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers, getDepartmentTable,
@@ -8,31 +8,32 @@ const {
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase
 } = require('../controllers/explore');
+const { ADMIN, EXAMCONTROLLER, EXAMOFFICER, HOD, MEMBER } = require('../database/types');
 
 // /api/explore
 router
-    .get('/deptNames', loggingMiddleware, authValidator, getDeptNames)
-    .post('/deptNames', loggingMiddleware, authValidator, postDeptNames)
+    .get('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getDeptNames)
+    .post('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), postDeptNames)
 
-    .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, getDeptTableWithoutExaminers)
-    .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, postDeptTableWithoutExaminers)
+    .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getDeptTableWithoutExaminers)
+    .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), postDeptTableWithoutExaminers)
 
-    .get('/departmentTable', loggingMiddleware, authValidator, getDepartmentTable)
-    .post('/departmentTable', loggingMiddleware, authValidator, postDepartmentTable)
+    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD, EXAMOFFICER, EXAMCONTROLLER]), getDepartmentTable)
+    .post('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([HOD, EXAMOFFICER, EXAMCONTROLLER]), postDepartmentTable)
 
-    .post('/commitRow', loggingMiddleware, authValidator, commitRow)
+    .post('/commitRow', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), commitRow)
 
-    .get('/deptStatus', loggingMiddleware, authValidator, getDeptStatus)
-    .post('/deptStatus', loggingMiddleware, authValidator, postDeptStatus)
+    .get('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getDeptStatus)
+    .put('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([HOD]), postDeptStatus)
 
-    .get('/approval1', loggingMiddleware, authValidator, getApproval1)
-    .put('/approval1', loggingMiddleware, authValidator, putApproval1)
+    .get('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getApproval1)
+    .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), putApproval1)
 
-    .get('/approval2', loggingMiddleware, authValidator, getApproval2)
-    .put('/approval2', loggingMiddleware, authValidator, putApproval2)
+    .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), getApproval2)
+    .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), putApproval2)
 
-    .get('/excellSheet', loggingMiddleware, authValidator, getExcellSheet)
+    .get('/excellSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getExcellSheet)
 
-    .delete('/', loggingMiddleware, authValidator, clearDatabase);
+    .delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), clearDatabase);
 
 module.exports = router;
