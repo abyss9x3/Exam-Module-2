@@ -1,43 +1,74 @@
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback, useState } from 'react';
 import UserContext from './userContext';
-import UserReducer from './userReducer';
-import { SET_USER, REMOVE_USER, CLEAR_USER } from './userTypes';
+import { SERVER_LINK } from './../../dev-server-link';
 
-const initialState = [];
+const initialState = {
+    isLoading: false,
+    loggedIn: undefined,
+    error: undefined,
+    loginid: undefined,
+    name: undefined,
+    designation: undefined,
+    deptName: undefined
+};
 
 const UserState = props => {
 
-    const [user, dispatch] = useReducer(UserReducer, initialState);
+    const [user, setUser] = useState(initialState);
 
-    const write = useCallback((msg) => {
-        dispatch({
-            type: SET_USER,
-            payload: msg
-        });
-    }, [])
+    const getLoggedIn = useCallback(async () => {
 
-    const pop = useCallback((afterms = 0, msg) => {
-        setTimeout(() => {
-            dispatch({
-                type: REMOVE_USER,
-                payload: { msg }
+        try {
+            setUser(prev => prev.isLoading = true);
+
+            const response = await fetch(
+                `${SERVER_LINK}/api/user/loggedIn`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'GET',
+                    credentials: 'include'
+                }
+            ).then(data => data.json());
+
+            setUser(prev => {
+                prev.loggedIn = response.status || false;
+
+                prev.loginid = response.loginid || undefined;
+                prev.name = response.name || undefined;
+                prev.designation = response.designation || undefined;
+                prev.deptName = response.deptName || undefined;
+
+                return prev;
             });
-        }, afterms);
+
+        } catch (error) {
+            console.error(error);
+            setUser(prev => prev.error = JSON.stringify(error));
+        } finally {
+            setUser(prev => prev.isLoading = false);
+        }
+
     }, [])
 
-    const clear = useCallback(() => {
-        dispatch({
-            type: CLEAR_USER
-        });
+    const signup = useCallback(async () => {
+
     }, [])
+
+    const login = useCallback(async () => {
+
+    }, [])
+
+    const logout = useCallback(async () => {
+
+    }, [])
+
 
     return (
         <UserContext.Provider
             value={{
-                user,
-                write,
-                pop,
-                clear
+                user, login, signup, getLoggedIn, logout
             }}
         >
             {props.children}
