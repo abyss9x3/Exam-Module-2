@@ -32,7 +32,7 @@ CREATE TABLE Examiner2
 (
   email VARCHAR(100) NOT NULL,
   name VARCHAR(100) NOT NULL,
-  contactNo INT NOT NULL,
+  conatctNo INT NOT NULL,
   PRIMARY KEY (email)
 );
 
