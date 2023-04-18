@@ -27,7 +27,7 @@ CREATE TABLE Examiner_2
 (
   Email VARCHAR(100) NOT NULL,
   Name VARCHAR(100) NOT NULL,
-  ConatctNo INT NOT NULL,
+  ContactNo INT NOT NULL,
   PRIMARY KEY (Email)
 );
 
