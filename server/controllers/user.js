@@ -35,18 +35,7 @@ const registerController = async (req, res) => {
         // save a new user account to the db
         await User.createNewUser({ name, loginid, password: passwordHash, designation, deptName });
 
-        // sign the token
-        const token = jwt.sign(
-            { loginid, name, designation, deptName },
-            process.env.JWT_SECRET
-        );
-
-        // send the token in a HTTP-only cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            // secure: true,
-            // sameSite: "none",
-        }).status(200).json({ msg: "Registered" });
+        res.status(200).json({ msg: "Registered" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal Error" });

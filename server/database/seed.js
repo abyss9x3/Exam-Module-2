@@ -1,81 +1,86 @@
 const seedingQuery = `
-CREATE TABLE Exam_SubCommittee
+drop database em2;
+
+create database em2;
+use em2;
+
+CREATE TABLE ExamSubCommittee
 (
-  DeptName VARCHAR(100) NOT NULL,
-  PRIMARY KEY (DeptName)
+  deptName VARCHAR(100) NOT NULL,
+  PRIMARY KEY (deptName)
 );
 
-CREATE TABLE Exam_Office
+CREATE TABLE ExamOffice
 (
-  Login_ID VARCHAR(100) NOT NULL,
-  Password VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL,
+  loginid VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL,
   signature blob,
   designation varchar(100) not null,
-  PRIMARY KEY (Login_ID)
+  PRIMARY KEY (loginid)
 );
 
-CREATE TABLE Examiner_1
+CREATE TABLE Examiner1
 (
-  Email VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL,
-  ContactNo INT NOT NULL,
-  PRIMARY KEY (Email)
+  email VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  contactNo INT NOT NULL,
+  PRIMARY KEY (email)
 );
 
-CREATE TABLE Examiner_2
+CREATE TABLE Examiner2
 (
-  Email VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL,
-  ContactNo INT NOT NULL,
-  PRIMARY KEY (Email)
+  email VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  conatctNo INT NOT NULL,
+  PRIMARY KEY (email)
 );
 
 CREATE TABLE Approval
 (
-  DeptName VARCHAR(100) NOT NULL,
-  Approval1 Bool ,
-  Approval2 Bool ,
-  SendStatus Bool ,
-  PRIMARY KEY (DeptName)
+  deptName VARCHAR(100) NOT NULL,
+  approval1 Bool ,
+  approval2 Bool ,
+  sendStatus Bool ,
+  PRIMARY KEY (deptName)
 );
 
 CREATE TABLE Member
 (
-  Signature BLOB ,
-  Login_ID VARCHAR(100) NOT NULL,
-  Password VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL,
-  Designation VARCHAR(100) NOT NULL,
-  DeptName VARCHAR(100) NOT NULL,
-  PRIMARY KEY (Login_ID),
-  FOREIGN KEY (DeptName) REFERENCES Exam_SubCommittee(DeptName)
+  signature BLOB ,
+  loginid VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  designation VARCHAR(100) NOT NULL,
+  deptName VARCHAR(100) NOT NULL,
+  PRIMARY KEY (loginid),
+  FOREIGN KEY (deptName) REFERENCES ExamSubCommittee(deptName)
 );
 
-CREATE TABLE Exam_Module
+CREATE TABLE ExamModule
 (
-  ID VARCHAR(10) NOT NULL,
-  SubNomenclature VARCHAR(100) ,
-  SubCode VARCHAR(50) ,
-  ExamCode INT ,
-  Template BLOB ,
-  Syllabus BLOB ,
-  DeptName VARCHAR(100) ,
-  Examiner1 VARCHAR(100) ,
-  Examiner2 VARCHAR(100) ,
-  PRIMARY KEY (ID),
-  FOREIGN KEY (Examiner1) REFERENCES Examiner_1(Email),
-  FOREIGN KEY (Examiner2) REFERENCES Examiner_2(Email)
+  id VARCHAR(10) NOT NULL,
+  subNomenclature VARCHAR(100) ,
+  subCode VARCHAR(50) ,
+  examCode INT ,
+  template BLOB ,
+  syllabus BLOB ,
+  deptName VARCHAR(100) ,
+  examiner1 VARCHAR(100) ,
+  examiner2 VARCHAR(100) ,
+  PRIMARY KEY (id),
+  FOREIGN KEY (examiner1) REFERENCES Examiner1(email),
+  FOREIGN KEY (examiner2) REFERENCES Examiner2(email)
 );
 
-CREATE TABLE commits
+CREATE TABLE Commits
 (
-  Member VARCHAR(100) NOT NULL,
-  ExamModuleID VARCHAR(10) NOT NULL,
-  PRIMARY KEY (Member, ExamModuleID),
-  FOREIGN KEY (Member) REFERENCES Member(Login_ID),
-  FOREIGN KEY (ExamModuleID) REFERENCES Exam_Module(ID)
-)
+  member VARCHAR(100) NOT NULL,
+  examModuleID VARCHAR(10) NOT NULL,
+  PRIMARY KEY (member, examModuleID),
+  FOREIGN KEY (member) REFERENCES Member(loginid),
+  FOREIGN KEY (examModuleID) REFERENCES ExamModule(id)
+);
 `;
 
 const mysql = require('mysql2/promise');
