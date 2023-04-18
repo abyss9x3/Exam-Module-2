@@ -1,7 +1,7 @@
 import { Route, Routes, Navigate, BrowserRouter } from "react-router-dom";
 import Table from "./components/ExamOffice/Eotable";
-import Signup from "./components/Signup/Signup";
-import Login from "./components/Login/Login";
+import Signup from "./pages/Signup/Signup";
+import Login from "./pages/Login/Login";
 
 function App() {
   return (

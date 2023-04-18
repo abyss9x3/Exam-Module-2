@@ -9,8 +9,12 @@ const initialState = {
     loginid: undefined,
     name: undefined,
     designation: undefined,
-    deptName: undefined
+    deptName: undefined,
+    isAdminRegistering: false,
+    registrationError: undefined
 };
+
+// designation can be : member, hod, examofficer, examcontroller, admin
 
 const UserState = props => {
 
@@ -59,12 +63,14 @@ const UserState = props => {
         }
     }, []);
 
-    const signup = useCallback(async ({ name, loginid, password, designation, deptName }) => {
+    const register = useCallback(async ({ name, loginid, password, designation, deptName }) => {
+        let isRegistered;
         try {
             setUser(prev => {
-                prev.isLoading = true;
+                prev.isAdminRegistering = true;
                 return prev;
             });
+
             await fetch(
                 `${SERVER_LINK}/api/user/register`,
                 {
@@ -77,21 +83,24 @@ const UserState = props => {
                 }
             ).then(data => data.json());
 
-            await getLoggedIn();
-
+            isRegistered = true;
         } catch (error) {
-            console.error('Registering Failed !', error);
+            console.error('Registration Failed !', error);
             setUser(prev => {
-                prev.error = JSON.stringify(error)
+                prev.registrationError = JSON.stringify(error)
                 return prev;
             });
+
+            isRegistered = false;
         } finally {
             setUser(prev => {
-                prev.isLoading = false;
+                prev.isAdminRegistering = false;
                 return prev;
             });
         }
-    }, [getLoggedIn]);
+
+        return isRegistered;
+    }, []);
 
     const login = useCallback(async ({ loginid, password }) => {
         try {
@@ -165,7 +174,7 @@ const UserState = props => {
     return (
         <UserContext.Provider
             value={{
-                user, login, signup, getLoggedIn, logout
+                user, login, register, getLoggedIn, logout
             }}
         >
             {props.children}
