@@ -1,9 +1,14 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import Table from "./components/ExamOffice/Eotable";
-import Signup from "./pages/Signup/Signup";
-import Login from "./pages/Login/Login";
-import { useContext, useEffect } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import userContext from "./store/user/userContext";
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import styles from './App.module.css';
+import NavBar from './components/NavBar/NavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Login = React.lazy(() => import('./pages/Login/Login'));
+const Signup = React.lazy(() => import('./pages/Signup/Signup'));
 
 function App() {
 
@@ -16,12 +21,21 @@ function App() {
     }, [getLoggedIn]);
 
     return (
-        <Routes>
-            {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
-            <Route path="/" exact element={<Table />} />
-            <Route path="/login" exact element={<Login />} />
-            <Route path="/signup" exact element={<Signup />} />
-        </Routes>
+        <div className={styles.App}>
+
+            <NavBar />
+
+            <main className={styles.mainContainer}>
+                <Suspense fallback={<LoadingSpinner />}>
+                    <Routes>
+                        {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
+                        <Route path="/" exact element={<Table />} />
+                        <Route path="/login" exact element={<Login />} />
+                        <Route path="/signup" exact element={<Signup />} />
+                    </Routes>
+                </Suspense>
+            </main>
+        </div >
     );
 }
 

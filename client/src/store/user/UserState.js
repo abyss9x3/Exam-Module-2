@@ -49,6 +49,13 @@ const UserState = props => {
                 return { ...prev };
             });
 
+            if (response.status) {
+                setUser(prev => {
+                    prev.error = undefined;
+                    return { ...prev };
+                });
+            }
+
         } catch (error) {
             console.error(error);
             setUser(prev => {

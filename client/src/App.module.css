@@ -1,0 +1,10 @@
+.App {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-align: center;
+    height: auto !important;
+}
+
+.mainContainer {
+    padding-top: 50px;
+}
