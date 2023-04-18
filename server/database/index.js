@@ -57,7 +57,15 @@ const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     await sqlDatabase.execute(`insert into ExamModule (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
 }
 
-const getDepartmentTable = async deptName => { }
+const getDepartmentTable = async deptName => {
+    const [rows] = await sqlDatabase.execute(`SELECT id, subNomenclature, subCode, examCode,template, syllabus, deptName,
+    examiner1 as examiner1_email, examiner1.Name as examiner1_name, examiner1.ContactNo as examiner1_contactNo, 
+    examiner2 as examiner2_email, examiner2.Name as examiner2_name, examiner2.ContactNo as examiner2_contactNo FROM exammodule 
+    JOIN examiner1 on exammodule.examiner1=examiner1.email
+    JOIN examiner2 on exammodule.examiner2=examiner2.email
+    where deptName = '${deptName}' `);
+    return rows;
+}
 
 const postDepartmentTable = async ({ tableData, deptName }) => {
     // tableData = [ { id, SubNomenclature, SubCode, Template, Examiner1, Examiner2, Syllabus } ]
