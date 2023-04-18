@@ -10,6 +10,8 @@ CREATE TABLE Exam_Office
   Login_ID VARCHAR(100) NOT NULL,
   Password VARCHAR(100) NOT NULL,
   Name VARCHAR(100) NOT NULL,
+  signature blob,
+  designation varchar(100) not null,
   PRIMARY KEY (Login_ID)
 );
 
@@ -73,7 +75,7 @@ CREATE TABLE commits
   PRIMARY KEY (Member, ExamModuleID),
   FOREIGN KEY (Member) REFERENCES Member(Login_ID),
   FOREIGN KEY (ExamModuleID) REFERENCES Exam_Module(ID)
-);
+)
 `;
 
 const mysql = require('mysql2/promise');
@@ -84,20 +86,20 @@ const mysql = require('mysql2/promise');
 let sqlDatabase = null;
 
 const connectDB = async () => {
-    sqlDatabase = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE
-    });
+  sqlDatabase = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+  });
 
-    console.log("DataBase Connected !!!");
+  console.log("DataBase Connected !!!");
 }
 
 const seed = async () => {
-    await connectDB();
-    await sqlDatabase.execute(seedingQuery);
-    console.log("Seeding Completed !!!");
+  await connectDB();
+  await sqlDatabase.execute(seedingQuery);
+  console.log("Seeding Completed !!!");
 }
 
 seed();
