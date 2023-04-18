@@ -18,7 +18,10 @@ const UserState = props => {
 
     const getLoggedIn = useCallback(async () => {
         try {
-            setUser(prev => prev.isLoading = true);
+            setUser(prev => {
+                prev.isLoading = true;
+                return prev;
+            });
 
             const response = await fetch(
                 `${SERVER_LINK}/api/user/loggedIn`,
@@ -44,16 +47,24 @@ const UserState = props => {
 
         } catch (error) {
             console.error(error);
-            setUser(prev => prev.error = JSON.stringify(error));
+            setUser(prev => {
+                prev.error = JSON.stringify(error)
+                return prev;
+            });
         } finally {
-            setUser(prev => prev.isLoading = false);
+            setUser(prev => {
+                prev.isLoading = false;
+                return prev;
+            });
         }
-
-    }, [])
+    }, []);
 
     const signup = useCallback(async ({ name, loginid, password, designation, deptName }) => {
         try {
-            setUser(prev => prev.isLoading = true);
+            setUser(prev => {
+                prev.isLoading = true;
+                return prev;
+            });
             await fetch(
                 `${SERVER_LINK}/api/user/register`,
                 {
@@ -70,15 +81,24 @@ const UserState = props => {
 
         } catch (error) {
             console.error('Registering Failed !', error);
-            setUser(prev => prev.error = JSON.stringify(error));
+            setUser(prev => {
+                prev.error = JSON.stringify(error)
+                return prev;
+            });
         } finally {
-            setUser(prev => prev.isLoading = false);
+            setUser(prev => {
+                prev.isLoading = false;
+                return prev;
+            });
         }
-    }, [getLoggedIn])
+    }, [getLoggedIn]);
 
     const login = useCallback(async ({ loginid, password }) => {
         try {
-            setUser(prev => prev.isLoading = true);
+            setUser(prev => {
+                prev.isLoading = true;
+                return prev;
+            });
 
             await fetch(
                 `${SERVER_LINK}/api/user/login`,
@@ -96,15 +116,24 @@ const UserState = props => {
 
         } catch (error) {
             console.error('LogIn Failed !', error);
-            setUser(prev => prev.error = JSON.stringify(error));
+            setUser(prev => {
+                prev.error = JSON.stringify(error)
+                return prev;
+            });
         } finally {
-            setUser(prev => prev.isLoading = false);
+            setUser(prev => {
+                prev.isLoading = false;
+                return prev;
+            });
         }
     }, [getLoggedIn]);
 
     const logout = useCallback(async () => {
         try {
-            setUser(prev => prev.isLoading = true);
+            setUser(prev => {
+                prev.isLoading = true;
+                return prev;
+            });
 
             await fetch(
                 `${SERVER_LINK}/api/user/logout`,
@@ -121,11 +150,17 @@ const UserState = props => {
 
         } catch (error) {
             console.error('LogOut Failed !', error);
-            setUser(prev => prev.error = JSON.stringify(error));
+            setUser(prev => {
+                prev.error = JSON.stringify(error)
+                return prev;
+            });
         } finally {
-            setUser(prev => prev.isLoading = false);
+            setUser(prev => {
+                prev.isLoading = false;
+                return prev;
+            });
         }
-    }, [getLoggedIn])
+    }, [getLoggedIn]);
 
     return (
         <UserContext.Provider
