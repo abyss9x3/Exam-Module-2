@@ -17,7 +17,7 @@ const connectDB = async () => {
 }
 
 // User
-const createNewUser = async ({ name, loginid, passwordHash, entity }) => { }
+const createNewUser = async ({ name, loginid, password, entity }) => { }
 
 const getUserById = async loginid => {
     const [rows] = await sqlDatabase.execute(`select * from ExamOffice where loginid="${loginid}"`);
