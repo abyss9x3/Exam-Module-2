@@ -65,12 +65,6 @@ const registerValidator = async (req, res, next) => {
                 error: "Please enter a password of at least 4 characters.",
             });
 
-        if (loginid.toLowerCase().includes('aman')) {
-            return res.status(400).json({
-                error: "These loginids (including 'aman') are reserved for Admin Only !"
-            });
-        }
-
         if (![ADMIN, HOD, MEMBER, EXAMCONTROLLER, EXAMOFFICER].includes(designation)) {
             return res.status(400).json({
                 error: "designation should be either one of these : admin,hod,member,examcontroller,examofficer"

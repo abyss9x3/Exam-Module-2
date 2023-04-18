@@ -11,7 +11,7 @@ const Login = () => {
 
     useEffect(() => {
         if (user.loggedIn) {
-            navigator("/home");
+            navigator("/");
         }
     }, [navigator, user.loggedIn]);
 
@@ -24,7 +24,7 @@ const Login = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         if (user.isLoading) return;
-        login({ loginid: data.loginid, password: data.loginid });
+        login({ loginid: data.loginid, password: data.password });
     };
 
     return (

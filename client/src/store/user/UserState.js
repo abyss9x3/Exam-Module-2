@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import UserContext from './userContext';
 import { SERVER_LINK } from './../../dev-server-link';
 
@@ -24,7 +24,7 @@ const UserState = props => {
         try {
             setUser(prev => {
                 prev.isLoading = true;
-                return prev;
+                return { ...prev };
             });
 
             const response = await fetch(
@@ -46,32 +46,32 @@ const UserState = props => {
                 prev.designation = response.designation || undefined;
                 prev.deptName = response.deptName || undefined;
 
-                return prev;
+                return { ...prev };
             });
 
         } catch (error) {
             console.error(error);
             setUser(prev => {
                 prev.error = JSON.stringify(error)
-                return prev;
+                return { ...prev };
             });
         } finally {
             setUser(prev => {
                 prev.isLoading = false;
-                return prev;
+                return { ...prev };
             });
         }
     }, []);
 
     const register = useCallback(async ({ name, loginid, password, designation, deptName }) => {
-        let isRegistered;
+        let isRegistered = false;
         try {
             setUser(prev => {
                 prev.isAdminRegistering = true;
-                return prev;
+                return { ...prev };
             });
 
-            await fetch(
+            const response = await fetch(
                 `${SERVER_LINK}/api/user/register`,
                 {
                     headers: {
@@ -83,19 +83,28 @@ const UserState = props => {
                 }
             ).then(data => data.json());
 
-            isRegistered = true;
+            if (response.error) {
+                setUser(prev => {
+                    prev.registrationError = response.error;
+                    return { ...prev };
+                });
+                isRegistered = false;
+            } else {
+                isRegistered = true;
+            }
+
         } catch (error) {
             console.error('Registration Failed !', error);
             setUser(prev => {
                 prev.registrationError = JSON.stringify(error)
-                return prev;
+                return { ...prev };
             });
 
             isRegistered = false;
         } finally {
             setUser(prev => {
                 prev.isAdminRegistering = false;
-                return prev;
+                return { ...prev };
             });
         }
 
@@ -106,10 +115,10 @@ const UserState = props => {
         try {
             setUser(prev => {
                 prev.isLoading = true;
-                return prev;
+                return { ...prev };
             });
 
-            await fetch(
+            const response = await fetch(
                 `${SERVER_LINK}/api/user/login`,
                 {
                     headers: {
@@ -123,16 +132,23 @@ const UserState = props => {
 
             await getLoggedIn();
 
+            if (response.error) {
+                setUser(prev => {
+                    prev.error = response.error;
+                    return { ...prev };
+                });
+            }
+
         } catch (error) {
             console.error('LogIn Failed !', error);
             setUser(prev => {
                 prev.error = JSON.stringify(error)
-                return prev;
+                return { ...prev };
             });
         } finally {
             setUser(prev => {
                 prev.isLoading = false;
-                return prev;
+                return { ...prev };
             });
         }
     }, [getLoggedIn]);
@@ -141,10 +157,10 @@ const UserState = props => {
         try {
             setUser(prev => {
                 prev.isLoading = true;
-                return prev;
+                return { ...prev };
             });
 
-            await fetch(
+            const response = await fetch(
                 `${SERVER_LINK}/api/user/logout`,
                 {
                     headers: {
@@ -157,16 +173,23 @@ const UserState = props => {
 
             await getLoggedIn();
 
+            if (response.error) {
+                setUser(prev => {
+                    prev.error = response.error;
+                    return { ...prev };
+                });
+            }
+
         } catch (error) {
             console.error('LogOut Failed !', error);
             setUser(prev => {
                 prev.error = JSON.stringify(error)
-                return prev;
+                return { ...prev };
             });
         } finally {
             setUser(prev => {
                 prev.isLoading = false;
-                return prev;
+                return { ...prev };
             });
         }
     }, [getLoggedIn]);

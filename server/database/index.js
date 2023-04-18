@@ -17,32 +17,33 @@ const connectDB = async () => {
 }
 
 // User
-const createNewUser = async ({ name, loginid, passwordHash, entity }) => {
-}
+const createNewUser = async ({ name, loginid, passwordHash, entity }) => { }
+
 const getUserById = async loginid => {
-    return {};
+    const [rows] = await sqlDatabase.execute(`select * from ExamOffice where loginid="${loginid}"`);
+    return rows[0];
 }
-const deleteUser = async loginid => {
-}
+
+const deleteUser = async loginid => { }
 
 // all other database queries
 const getDeptNames = async () => {
-    const [rows] = await sqlDatabase.execute("select * from exam_subcommitee");
+    const [rows] = await sqlDatabase.execute("select * from examsubcommitee");
     return rows.map(ele => ele.Department)
 }
 
 const postDeptNames = async deptNames => {
-    await sqlDatabase.execute(`delete from exam_subcommitee`);
+    await sqlDatabase.execute(`delete from examsubcommitee`);
 
     let str = `("${deptNames[0]}")`;
     for (let i = 1; i < deptNames.length; ++i) {
         str = `${str}, ("${deptNames[i]}")`
     }
-    await sqlDatabase.execute(`insert into exam_subcommitee values ${str}`);
+    await sqlDatabase.execute(`insert into examsubcommitee values ${str}`);
 }
 
 const getDeptTableWithoutExaminers = async deptName => {
-    const [rows] = await sqlDatabase.execute(`select Id, SubNomenclature, SubCode, Template from Exam_Module where deptName="${deptName}"`)
+    const [rows] = await sqlDatabase.execute(`select Id, SubNomenclature, SubCode, Template from ExamModule where deptName="${deptName}"`)
     return rows;
 }
 
@@ -52,8 +53,8 @@ const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     for (let i = 1; i < tableData.length; ++i) {
         str = `${str}, ("${tableData[i].id}", "${tableData[i].SubNomenclature}", "${tableData[i].SubCode}", "${tableData[i].Template}", "${deptName}")`
     }
-    await sqlDatabase.execute(`delete from Exam_Module where DeptName="${deptName}"`)
-    await sqlDatabase.execute(`insert into Exam_Module (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
+    await sqlDatabase.execute(`delete from ExamModule where DeptName="${deptName}"`)
+    await sqlDatabase.execute(`insert into ExamModule (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
 }
 
 const getDepartmentTable = async deptName => { }
