@@ -71,7 +71,7 @@ const getDeptTableWithoutExaminers = async deptName => {
 }
 
 const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
-    // tableData = [ { id, SubNomenclature, SubCode, Template } ]
+    // tableData = [ { id, subNomenclature, subCode, template } ]
     let str = `("${tableData[0].id}", "${tableData[0].SubNomenclature}", "${tableData[0].SubCode}", "${tableData[0].Template}", "${deptName}")`;
     for (let i = 1; i < tableData.length; ++i) {
         str = `${str}, ("${tableData[i].id}", "${tableData[i].SubNomenclature}", "${tableData[i].SubCode}", "${tableData[i].Template}", "${deptName}")`
@@ -91,15 +91,11 @@ const getDepartmentTable = async deptName => {
 }
 
 const postDepartmentTable = async ({ tableData, deptName }) => {
-    // tableData = [ { id, SubNomenclature, SubCode, Template, Examiner1, Examiner2, Syllabus } ]
-    // Examiner1 = { Email, Name, ContactNo }
-    // Examiner2 = { Email, Name, ContactNo }
+    // tableData = [ { id, subNomenclature, subCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus } ]
 }
 
 const commitRow = async ({ deptName, rowData, memberName, memberLoginId }) => {
-    // rowData = { id, SubNomenclature, SubCode, Template, Examiner1, Examiner2, Syllabus }
-    // Examiner1 = { Email, Name, ContactNo }
-    // Examiner2 = { Email, Name, ContactNo }
+    // rowData = { id, subNomenclature, subCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
 }
 
 const getDeptStatus = async deptName => { }
@@ -115,7 +111,7 @@ const getApproval2 = async deptName => { }
 const putApproval2 = async deptName => { }
 
 const getExcellSheet = async () => {
-    // return [ { id, SubNomenclature, SubCode, ExamCode, Template, Examiner1_email, Examiner1_name, Examiner1_contactno, Examiner2_email, Examiner2_name, Examiner2_contactno, Syllabus, deptName } ]
+    // return [ { id, subNomenclature, subCode, examCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus, deptName } ]
     // imp: above order is necessary here !
 }
 
