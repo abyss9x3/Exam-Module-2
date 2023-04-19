@@ -98,17 +98,33 @@ const commitRow = async ({ deptName, rowData, memberName, memberLoginId }) => {
     // rowData = { id, subNomenclature, subCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
 }
 
-const getDeptStatus = async deptName => { }
 
-const postDeptStatus = async deptName => { }
+const getDeptStatus = async deptName => {
+    const [rows] = await sqlDatabase.execute(`select sendStatus from Approval where DeptName="${deptName}"`);
+    return rows[0];
+}
 
-const getApproval1 = async deptName => { }
+const postDeptStatus = async deptName => {
+    await sqlDatabase.execute(`update Approval set sendStatus=true where deptName="${deptName}"`);
+}
 
-const putApproval1 = async deptName => { }
+const getApproval1 = async deptName => {
+    const [rows] = await sqlDatabase.execute(`select approval1 from Approval where DeptName="${deptName}"`);
+    return rows[0];
+}
 
-const getApproval2 = async deptName => { }
+const putApproval1 = async deptName => {
+    await sqlDatabase.execute(`update Approval set approval1=true where deptName="${deptName}"`);
+}
 
-const putApproval2 = async deptName => { }
+const getApproval2 = async deptName => {
+    const [rows] = await sqlDatabase.execute(`select approval2 from Approval where DeptName="${deptName}"`);
+    return rows[0];
+}
+
+const putApproval2 = async deptName => {
+    await sqlDatabase.execute(`update Approval set approval2=true where deptName="${deptName}"`);
+}
 
 const getExcellSheet = async () => {
     // return [ { id, subNomenclature, subCode, examCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus, deptName } ]
