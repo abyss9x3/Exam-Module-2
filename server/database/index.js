@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const { HOD, MEMBER, EXAMOFFICER, EXAMCONTROLLER } = require('./types');
 
 /**
 * @type {mysql.Connection}
@@ -17,14 +18,36 @@ const connectDB = async () => {
 }
 
 // User
-const createNewUser = async ({ name, loginid, password, entity }) => { }
-
-const getUserById = async loginid => {
-    const [rows] = await sqlDatabase.execute(`select * from ExamOffice where loginid="${loginid}"`);
-    return rows[0];
+const createNewUser = async ({ name, loginid, password, designation, deptName }) => {
+    if (designation === HOD || designation === MEMBER) {
+        await sqlDatabase.execute(`insert into member(name, loginid, password,  designation, deptname) values ("${name}","${loginid}","${password}","${designation}","${deptName}");`);
+    }
+    else if (designation === EXAMOFFICER || designation === EXAMCONTROLLER) {
+        await sqlDatabase.execute(`insert into examoffice(name, loginid, password,  designation, deptname) values ("${name}","${loginid}","${password}","${designation}","${deptName}");`);
+    }
+    else {
+        throw new ERROR('designation doesnot exist');
+    }
 }
 
-const deleteUser = async loginid => { }
+const getUserById = async loginid => {
+    const [rowsem] = await sqlDatabase.execute(`select * from ExamOffice where loginid="${loginid}"`);
+    const [rowM] = await sqlDatabase.execute(`select * from Member where loginid="${loginid}"`);
+
+    if (!rowM.length && rowsem.length) return rowsem[0];
+    else if (!rowsem.length && rowM.length) return rowM[0];
+    else return null;
+}
+
+
+const deleteUser = async ({ loginid, designation }) => {
+    if (designation === HOD || designation === MEMBER) {
+        await sqlDatabase.execute(`delete from Member where loginid = "${loginid}"`);
+    }
+    else if (designation === EXAMOFFICER || designation === EXAMCONTROLLER) {
+        await sqlDatabase.execute(`delete from ExamOffice where loginid = "${loginid}"`);
+    }
+}
 
 // all other database queries
 const getDeptNames = async () => {
