@@ -69,8 +69,8 @@ CREATE TABLE ExamModule
   examiner1 VARCHAR(100) ,
   examiner2 VARCHAR(100) ,
   PRIMARY KEY (id),
-  FOREIGN KEY (examiner1) REFERENCES Examiner1(email),
-  FOREIGN KEY (examiner2) REFERENCES Examiner2(email)
+  FOREIGN KEY (examiner1) REFERENCES Examiner1(email) ON DELETE CASCADE,
+  FOREIGN KEY (examiner2) REFERENCES Examiner2(email) ON DELETE CASCADE
 );
 
 CREATE TABLE Commits
@@ -81,6 +81,16 @@ CREATE TABLE Commits
   FOREIGN KEY (member) REFERENCES Member(loginid),
   FOREIGN KEY (examModuleID) REFERENCES ExamModule(id)
 );
+
+delimiter |
+CREATE TRIGGER auto_delete_all_examiner_on_deleting_an_exam_module_entry
+AFTER DELETE ON ExamModule FOR EACH ROW
+BEGIN
+  DELETE FROM Examiner1 WHERE email = OLD.Examiner1;
+  DELETE FROM Examiner2 WHERE email = OLD.Examiner2;
+END;
+delimiter;
+
 `;
 
 const mysql = require('mysql2/promise');
