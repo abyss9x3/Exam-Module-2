@@ -81,7 +81,24 @@ const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
 }
 
 const getDepartmentTable = async deptName => {
-    const [rows] = await sqlDatabase.execute(`SELECT id, subNomenclature, subCode, template, syllabus, deptName,
+    const [rows] = await sqlDatabase.execute(`
+    SELECT id, subNomenclature, subCode, template, syllabus, deptName,
+    examiner1 as examiner1_email, examiner1.Name as examiner1_name, examiner1.ContactNo as examiner1_contactNo, 
+    examiner2 as examiner2_email, examiner2.Name as examiner2_name, examiner2.ContactNo as examiner2_contactNo,
+    commits.member  as member
+    FROM exammodule
+    
+    LEFT JOIN Examiner1 on Exammodule.examiner1=examiner1.email
+    LEFT JOIN Examiner2 on Exammodule.examiner2=examiner2.email
+    LEFT JOIN commits on exammodule.id=commits.examModuleID
+    where deptName = '${deptName}' `);
+    return rows;
+}
+
+
+const getDepartmentTableWithoutCommits = async deptName => {
+    const [rows] = await sqlDatabase.execute(`
+    SELECT id, subNomenclature, subCode, template, syllabus, deptName,
     examiner1 as examiner1_email, examiner1.Name as examiner1_name, examiner1.ContactNo as examiner1_contactNo, 
     examiner2 as examiner2_email, examiner2.Name as examiner2_name, examiner2.ContactNo as examiner2_contactNo FROM exammodule 
     LEFT JOIN examiner1 on exammodule.examiner1=examiner1.email
@@ -102,8 +119,8 @@ const postExaminers = async tableData => {
 
     let str2 = `("${examiner2[0].name}", "${examiner2[0].email}", ${examiner2[0].contactNo})`;
     for (let i = 1; i < examiner2.length; ++i) {
-        str2 = `${str2}, ("${examiner2[i].name}", "${examiner2[i].email}", ${examiner2[i].contactNo})`
     }
+    str2 = `${str2}, ("${examiner2[i].name}", "${examiner2[i].email}", ${examiner2[i].contactNo})`
     await sqlDatabase.execute(`insert into Examiner2 (name,email,contactNo) values ${str2}`);
 }
 
@@ -120,9 +137,12 @@ const postDepartmentTable = async ({ tableData, deptName }) => {
     await sqlDatabase.execute(`insert into ExamModule (id, subNomenclature, subCode, template, examiner1, examiner2, syllabus, deptName ) values ${str}`);
 }
 
-
-const commitRow = async ({ deptName, rowData, memberName, memberLoginId }) => {
-    // rowData = { id, subNomenclature, subCode, template, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
+const commitRow = async ({ deptName, rowData, memberLoginId }) => {
+    // rowData = { id, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
+    await sqlDatabase.execute(`INSERT into Examiner1 (email, name, contactNo) values ('${rowData.examiner1_email}', '${rowData.examiner1_name}', ${rowData.examiner1_contactNo})`);
+    await sqlDatabase.execute(`INSERT into Examiner2 (email, name, contactNo) values ('${rowData.examiner2_email}', '${rowData.examiner2_name}', ${rowData.examiner2_contactNo})`);
+    await sqlDatabase.execute(`UPDATE ExamModule SET examiner1="${rowData.examiner1_email}", examiner2="${rowData.examiner2_email}", syllabus=${rowData.syllabus} WHERE id="${rowData.id}"`);
+    await sqlDatabase.execute(`INSERT INTO Commits (member, examModuleID) values ('${memberLoginId}', '${rowData.id}')`);
 }
 
 const initiateApprovalTable = async deptNames => {
@@ -193,6 +213,7 @@ module.exports = {
     postDepartmentTable, commitRow, getDeptStatus,
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet,
-    clearDatabase, getAllExaminers, initiateApprovalTable
+    clearDatabase, getAllExaminers, initiateApprovalTable,
+    getDepartmentTableWithoutCommits
 }
 

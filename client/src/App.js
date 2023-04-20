@@ -12,31 +12,31 @@ const Signup = React.lazy(() => import('./pages/Signup/Signup'));
 
 function App() {
 
-    const { getLoggedIn } = useContext(userContext);
+  const { getLoggedIn } = useContext(userContext);
 
-    useEffect(() => {
-        // for the first time when website loads
-        // check wheather user is loggedIn or not
-        getLoggedIn();
-    }, [getLoggedIn]);
+  useEffect(() => {
+    // for the first time when website loads
+    // check wheather user is loggedIn or not
+    getLoggedIn();
+  }, [getLoggedIn]);
 
-    return (
-        <div className={styles.App}>
+  return (
+    <div className={styles.App}>
 
-            <NavBar />
+      <NavBar />
 
-            <main className={styles.mainContainer}>
-                <Suspense fallback={<LoadingSpinner />}>
-                    <Routes>
-                        {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
-                        <Route path="/" exact element={<Table />} />
-                        <Route path="/login" exact element={<Login />} />
-                        <Route path="/signup" exact element={<Signup />} />
-                    </Routes>
-                </Suspense>
-            </main>
-        </div >
-    );
+      <main className={styles.mainContainer}>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
+            <Route path="/" exact element={<Table />} />
+            <Route path="/login" exact element={<Login />} />
+            <Route path="/signup" exact element={<Signup />} />
+          </Routes>
+        </Suspense>
+      </main>
+    </div >
+  );
 }
 
 export default App;
