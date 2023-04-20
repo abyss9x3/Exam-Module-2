@@ -65,6 +65,7 @@ const getDepartmentTable = async (req, res) => {
     }
 }
 
+
 const postDepartmentTable = async (req, res) => {
     try {
         if (!req.body || !req.body.tableData || !req.body.deptName) {
@@ -72,6 +73,19 @@ const postDepartmentTable = async (req, res) => {
         }
         await database.postDepartmentTable({ tableData: req.body.tableData, deptName: req.body.deptName });
         res.status(200).json("Done");
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error);
+    }
+}
+
+const getDepartmentTableWithoutCommits = async (req, res) => {
+    try {
+        if (!req.query || !req.query.deptName) {
+            res.status(400).json("deptName is missing from the req query !");
+        }
+        const deptTable = await database.getDepartmentTableWithoutCommits(req.query.deptName);
+        res.status(200).json(deptTable);
     } catch (error) {
         console.log(error);
         res.status(400).json(error);
@@ -211,5 +225,6 @@ module.exports = {
     postDeptTableWithoutExaminers, getDepartmentTable,
     postDepartmentTable, commitRow, getDeptStatus,
     postDeptStatus, getApproval1, putApproval1,
-    getApproval2, putApproval2, getExcellSheet, clearDatabase
+    getApproval2, putApproval2, getExcellSheet, clearDatabase,
+    getDepartmentTableWithoutCommits
 }

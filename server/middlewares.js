@@ -109,11 +109,11 @@ const authValidator = (req, res, next) => {
 
 // create and return a middleware
 const authorizationHandler = authorizedUsersList => {
-    // this middleware check if user is in authorizedUserList and is in authorized department
+    // this middleware check if user is in authorizedUserList or Admin and is in authorized department
     return (req, res, next) => {
         try {
             const designation = req.designation;
-            if (!designation || !authorizedUsersList.includes(designation))
+            if (!designation || !authorizedUsersList.includes(designation) || designation === ADMIN)
                 throw new Error("This designation is not authorized");
             // for Members and HODs
             if ([HOD, MEMBER].includes(designation)) {
