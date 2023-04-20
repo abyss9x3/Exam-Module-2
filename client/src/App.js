@@ -1,5 +1,6 @@
 import { Route, Routes, Navigate, BrowserRouter } from "react-router-dom";
 import Table from "./components/ExamOffice/Eotable";
+import DeptTable from "./components/Department/DptTable";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 
@@ -8,9 +9,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
-        <Route path="/" exact element={<Table />} />
-        <Route path="/login" exact element={<Login />} />
-        <Route path="/signup" exact element={<Signup />} />
+        <Route path='/' exact element={<Table />} />
+        <Route path='/Department' exact element={<DeptTable />} />
+        <Route path='/login' exact element={<Login />} />
+        <Route path='/signup' exact element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
