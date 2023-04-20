@@ -77,7 +77,7 @@ CREATE TABLE Commits
 (
   member VARCHAR(100) NOT NULL,
   examModuleID VARCHAR(10) NOT NULL,
-  PRIMARY KEY (member, examModuleID),
+  PRIMARY KEY (examModuleID),
   FOREIGN KEY (member) REFERENCES Member(loginid),
   FOREIGN KEY (examModuleID) REFERENCES ExamModule(id)
 );
@@ -89,7 +89,7 @@ BEGIN
   DELETE FROM Examiner1 WHERE email = OLD.Examiner1;
   DELETE FROM Examiner2 WHERE email = OLD.Examiner2;
 END;
-delimiter;
+delimiter ;
 
 `;
 
