@@ -34,7 +34,7 @@ const Table = () => {
         </thead>
         <tbody>
           {contacts.map((contact) => (
-            <tr>
+            <tr key={contact.id}>
               <td>{contact.id}</td>
               <td>{contact.Subject_Code}</td>
               <td>{contact.Subject_Number}</td>
