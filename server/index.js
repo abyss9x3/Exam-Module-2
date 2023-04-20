@@ -18,6 +18,10 @@ const { explore, user } = require('./routes');
 const { connectDB } = require('./database');
 connectDB();
 
+// Establish Connection for Nodemailer
+const { connectNodeMailer } = require('./mail');
+connectNodeMailer();
+
 // parse json request body
 app.use(express.json());
 app.use(cookieParser());
