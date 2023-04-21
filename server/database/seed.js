@@ -115,7 +115,7 @@ insert into Member (loginid, password, name, designation, deptName) values
 ("mcs3", "pass", "Raj", "member", "CS");
 
 insert into ExamOffice (loginid, password, name, designation) values 
-("admin", "pass", "Admin", "admin"), 
+("admin", "$2a$10$vk0UI6uB4ZEPcubspqCGhO4ebmjdaXYRXab4slfXcUFVUYGqAbL/K", "Admin", "admin"), 
 ("officer", "pass", "Officer", "examcontroller"),
 ("controller", "pass", "Controller", "examofficer");
 
@@ -163,33 +163,33 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 let sqlDatabase = null;
 
 const connectDB = async () => {
-    sqlDatabase = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE
-    });
-    console.log("DataBase Connected !!!");
+  sqlDatabase = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+  });
+  console.log("DataBase Connected !!!");
 }
 
 const seed = async () => {
-    await connectDB();
+  await connectDB();
 
-    const queryArray = [...(seedTestDataQuery.split(";"))];
+  const queryArray = [...(seedTestDataQuery.split(";"))];
 
-    try {
-        for (let i = 0; i < queryArray.length; ++i) {
-            const validQuery = queryArray.at(i).trim().replace(/\n/g, " ");
-            if (validQuery)
-                await sqlDatabase.execute(validQuery);
-        }
-    } catch (error) {
-        console.log(error);
-        exit(1);
+  try {
+    for (let i = 0; i < queryArray.length; ++i) {
+      const validQuery = queryArray.at(i).trim().replace(/\n/g, " ");
+      if (validQuery)
+        await sqlDatabase.execute(validQuery);
     }
+  } catch (error) {
+    console.log(error);
+    exit(1);
+  }
 
-    console.log("Seeding Completed !!!");
-    exit(0);
+  console.log("Seeding Completed !!!");
+  exit(0);
 }
 
 seed();
