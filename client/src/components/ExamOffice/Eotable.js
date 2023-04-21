@@ -1,58 +1,105 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import * as React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import { CSVLink } from "react-csv";
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: "id", headerName: "ID", width: 90 },
   {
-    field: 'Subject_Code',
-    headerName: 'Subject Code',
+    field: "Subject_Code",
+    headerName: "Subject Code",
     width: 150,
     editable: true,
   },
   {
-    field: 'Subject_Number',
-    headerName: 'Subject Number',
+    field: "Subject_Number",
+    headerName: "Subject Number",
     width: 150,
     editable: true,
   },
   {
-    field: 'template',
-    headerName: 'Template',
+    field: "template",
+    headerName: "Template",
     width: 110,
     editable: true,
   },
+  {
+    field: "commit",
+    headerName: "Commit",
+    width: 110,
+    renderCell: (params) => (
+      <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
+        Commit
+      </button>
+    ),
+  },
 ];
 
-const rows = [
-  { id: 1, Subject_Number: 'Snow', Subject_Code: 'Jon', template: 35 },
-  { id: 2, Subject_Number: 'Lannister', Subject_Code: 'Cersei', template: 42 },
-  { id: 3, Subject_Number: 'Lannister', Subject_Code: 'Jaime', template: 45 },
-  { id: 4, Subject_Number: 'Stark', Subject_Code: 'Arya', template: 16 },
-  { id: 5, Subject_Number: 'Targaryen', Subject_Code: 'Daenerys', template: null },
-  { id: 6, Subject_Number: 'Melisandre', Subject_Code: null, template: 150 },
-  { id: 7, Subject_Number: 'Clifford', Subject_Code: 'Ferrara', template: 44 },
-  { id: 8, Subject_Number: 'Frances', Subject_Code: 'Rossini', template: 36 },
-  { id: 9, Subject_Number: 'Roxie', Subject_Code: 'Harvey', template: 65 },
+const initialRows = [
+  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon", template: 35 },
+  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei", template: 42 },
+  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime", template: 45 },
+  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya", template: 16 },
+  {
+    id: 5,
+    Subject_Number: "Targaryen",
+    Subject_Code: "Daenerys",
+    template: null,
+  },
+  { id: 6, Subject_Number: "Melisandre", Subject_Code: null, template: 150 },
+  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara", template: 44 },
+  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini", template: 36 },
+  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
 ];
 
 export default function DataGridDemo() {
+  const [rows, setRows] = React.useState(initialRows);
+
+  const handleAddRow = () => {
+    const newId = rows.length + 1;
+    setRows([
+      ...rows,
+      { id: newId, Subject_Number: "", Subject_Code: "", template: null },
+    ]);
+  };
+
+  const data = React.useMemo(
+    () =>
+      rows.map(({ id, Subject_Code, Subject_Number, template }) => ({
+        id,
+        Subject_Code,
+        Subject_Number,
+        template,
+      })),
+    [rows]
+  );
+
   return (
-    // <Box sx={{ height: '100%', width: '100%' }}>
+    <>
+      <div sx={{ alignItems: "center" }}>
+        <button onClick={handleAddRow}>Add Row</button>
+        <CSVLink data={data} filename={"data.csv"}>
+          Download CSV
+        </CSVLink>
+      </div>
       <DataGrid
-        sx={{ alignItems: 'center' }}
+        sx={{ alignItems: "center" }}
         rows={rows}
         columns={columns}
-        ptemplateSize={5}
-        rowsPerPtemplateOptions={[5]}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        experimentalFeatures={{ newEditingApi: true }}
+        onEditCellChangeCommitted={(params, event) => {
+          const { id, field, value } = params;
+          setRows(
+            rows.map((row) =>
+              row.id === id ? { ...row, [field]: value } : row
+            )
+          );
+        }}
       />
-    // </Box>
+    </>
   );
 }
-
-
 
 // import { useState } from "react";
 
