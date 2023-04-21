@@ -6,7 +6,8 @@ const {
     postDeptTableWithoutExaminers, getDepartmentTable,
     postDepartmentTable, commitRow, getDeptStatus,
     postDeptStatus, getApproval1, putApproval1,
-    getApproval2, putApproval2, getExcellSheet, clearDatabase
+    getApproval2, putApproval2, getExcellSheet, clearDatabase,
+    getDepartmentTableWithoutCommits
 } = require('../controllers/explore');
 const { ADMIN, EXAMCONTROLLER, EXAMOFFICER, HOD, MEMBER } = require('../database/types');
 
@@ -18,8 +19,10 @@ router
     .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getDeptTableWithoutExaminers)
     .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), postDeptTableWithoutExaminers)
 
-    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD, EXAMOFFICER, EXAMCONTROLLER]), getDepartmentTable)
+    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), getDepartmentTable)
     .post('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([HOD, EXAMOFFICER, EXAMCONTROLLER]), postDepartmentTable)
+
+    .get('/departmentTableWithoutCommits', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getDepartmentTableWithoutCommits)
 
     .post('/commitRow', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), commitRow)
 

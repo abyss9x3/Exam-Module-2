@@ -17,7 +17,7 @@ const connectDB = async () => {
     console.log("DataBase Connected !!!");
 }
 
-// User
+// User - Queries related to login/signup/deleteUser
 const createNewUser = async ({ name, loginid, password, designation, deptName }) => {
     if (designation === HOD || designation === MEMBER) {
         await sqlDatabase.execute(`insert into member(name, loginid, password,  designation, deptname) values ("${name}","${loginid}","${password}","${designation}","${deptName}");`);
@@ -51,18 +51,18 @@ const deleteUser = async ({ loginid, designation }) => {
 
 // all other database queries
 const getDeptNames = async () => {
-    const [rows] = await sqlDatabase.execute("select * from examsubcommitee");
-    return rows.map(ele => ele.Department)
+    const [rows] = await sqlDatabase.execute("select * from examsubcommittee");
+    return rows.map(ele => ele.deptName);
 }
 
 const postDeptNames = async deptNames => {
-    await sqlDatabase.execute(`delete from examsubcommitee`);
+    await sqlDatabase.execute(`delete from examsubcommittee`);
 
     let str = `("${deptNames[0]}")`;
     for (let i = 1; i < deptNames.length; ++i) {
         str = `${str}, ("${deptNames[i]}")`
     }
-    await sqlDatabase.execute(`insert into examsubcommitee values ${str}`);
+    await sqlDatabase.execute(`insert into examsubcommittee values ${str}`);
 }
 
 const getDeptTableWithoutExaminers = async deptName => {
@@ -150,16 +150,16 @@ const initiateApprovalTable = async deptNames => {
     for (let i = 1; i < deptNames.length; ++i) {
         str = `${str}, ("${deptNames[i]}", false, false, false)`
     }
-    await sqlDatabase.execute(`insert into Approval (deptName, sendStatus, approval1, approval2) values ${str}`);
+    await sqlDatabase.execute(`insert into Approval (deptName, sentStatus, approval1, approval2) values ${str}`);
 }
 
 const getDeptStatus = async deptName => {
-    const [rows] = await sqlDatabase.execute(`select sendStatus from Approval where DeptName="${deptName}"`);
+    const [rows] = await sqlDatabase.execute(`select sentStatus from Approval where DeptName="${deptName}"`);
     return rows[0];
 }
 
 const postDeptStatus = async deptName => {
-    await sqlDatabase.execute(`update Approval set sendStatus=true where deptName="${deptName}"`);
+    await sqlDatabase.execute(`update Approval set sentStatus=true where deptName="${deptName}"`);
 }
 
 const getApproval1 = async deptName => {
@@ -196,7 +196,7 @@ const clearDatabase = async () => {
     await sqlDatabase.execute("delete from Examiner1");
     await sqlDatabase.execute("delete from Examiner2");
     await sqlDatabase.execute("delete from ExamModule");
-    await sqlDatabase.execute("update Approval SET sendStatus = false,  approval1 = false, approval2 = false");
+    await sqlDatabase.execute("update Approval SET sentStatus=false,  approval1=false, approval2=false");
 }
 
 const getAllExaminers = async () => {
