@@ -112,8 +112,8 @@ const authorizationHandler = authorizedUsersList => {
     // this middleware check if user is in authorizedUserList or Admin and is in authorized department
     return (req, res, next) => {
         try {
-            const designation = req.designation;
-            if (!designation || !authorizedUsersList.includes(designation) || designation === ADMIN)
+            const designation = req.designation.toLowerCase();
+            if (!designation || designation !== ADMIN && (!authorizedUsersList.includes(designation)))
                 throw new Error("This designation is not authorized");
             // for Members and HODs
             if ([HOD, MEMBER].includes(designation)) {

@@ -13,14 +13,14 @@ const loginController = async (req, res) => {
         );
 
         // send the token in a HTTP-only cookie
-        res.cookie("token", token, {
+        return res.cookie("token", token, {
             httpOnly: true,
             // secure: true,
             // sameSite: "none",
         }).status(200).json({ msg: "Logged In" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Internal Error" });
+        return res.status(500).json({ error: "Internal Error" });
     }
 }
 
@@ -35,10 +35,10 @@ const registerController = async (req, res) => {
         // save a new user account to the db
         await User.createNewUser({ name, loginid, password: passwordHash, designation, deptName });
 
-        res.status(200).json({ msg: "Registered" });
+        return res.status(200).json({ msg: "Registered" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Internal Error" });
+        return res.status(500).json({ error: "Internal Error" });
     }
 }
 
@@ -59,10 +59,10 @@ const loggedInController = async (req, res) => {
             loginid, name, designation, deptName
         } = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
 
-        res.status(200).json({ status: true, loginid, name, designation, deptName });
+        return res.status(200).json({ status: true, loginid, name, designation, deptName });
     } catch (err) {
         console.error(err);
-        res.status(200).json({ status: false });
+        return res.status(200).json({ status: false });
     }
 }
 
@@ -70,12 +70,18 @@ const deleteUserController = async (req, res) => {
     try {
         const loginid = (req.query && req.query.loginid) || (req.body && req.body.loginid);
         if (!loginid) {
-            res.status(400).json({ error: "Please enter all required fields.  Missing: loginid" });
+            return res.status(400).json({ error: "Please enter all required fields.  Missing: loginid" });
         }
-        await database.User.deleteUser(loginid);
-        res.status(200).json(`User ${loginid} deleted !`);
+
+        const existingUser = await database.User.getUserById(loginid);
+        if (!existingUser) {
+            return res.status(400).json({ error: "login id does not exists" });
+        }
+
+        await database.User.deleteUser({ loginid, designation: existingUser.designation });
+        return res.status(200).json(`User ${loginid} deleted !`);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).json({ error: "Internal Error", serverError: error });
     }
 }
