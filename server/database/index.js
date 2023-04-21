@@ -51,18 +51,18 @@ const deleteUser = async ({ loginid, designation }) => {
 
 // all other database queries
 const getDeptNames = async () => {
-    const [rows] = await sqlDatabase.execute("select * from examsubcommitee");
-    return rows.map(ele => ele.Department)
+    const [rows] = await sqlDatabase.execute("select * from examsubcommittee");
+    return rows.map(ele => ele.deptName);
 }
 
 const postDeptNames = async deptNames => {
-    await sqlDatabase.execute(`delete from examsubcommitee`);
+    await sqlDatabase.execute(`delete from examsubcommittee`);
 
     let str = `("${deptNames[0]}")`;
     for (let i = 1; i < deptNames.length; ++i) {
         str = `${str}, ("${deptNames[i]}")`
     }
-    await sqlDatabase.execute(`insert into examsubcommitee values ${str}`);
+    await sqlDatabase.execute(`insert into examsubcommittee values ${str}`);
 }
 
 const getDeptTableWithoutExaminers = async deptName => {
