@@ -1,6 +1,5 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { CSVLink } from "react-csv";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -22,16 +21,16 @@ const columns = [
     width: 110,
     editable: true,
   },
-  {
-    field: "commit",
-    headerName: "Commit",
-    width: 110,
-    renderCell: (params) => (
-      <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
-        Commit
-      </button>
-    ),
-  },
+  // {
+  //   field: "commit",
+  //   headerName: "Commit",
+  //   width: 110,
+  //   renderCell: (params) => (
+  //     <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
+  //       Commit
+  //     </button>
+  //   ),
+  // },
 ];
 
 const initialRows = [
@@ -75,12 +74,6 @@ export default function DataGridDemo() {
 
   return (
     <>
-      <div sx={{ alignItems: "center" }}>
-        <button onClick={handleAddRow}>Add Row</button>
-        <CSVLink data={data} filename={"data.csv"}>
-          Download CSV
-        </CSVLink>
-      </div>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -88,6 +81,7 @@ export default function DataGridDemo() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
+        hideFooterPagination
         onEditCellChangeCommitted={(params, event) => {
           const { id, field, value } = params;
           setRows(
@@ -97,6 +91,9 @@ export default function DataGridDemo() {
           );
         }}
       />
+      <div sx={{ alignItems: "center" }}>
+        <button onClick={handleAddRow}>Add Row</button>
+      </div>
     </>
   );
 }
