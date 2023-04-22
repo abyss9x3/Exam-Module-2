@@ -1,86 +1,202 @@
-import React, { useState, Fragment } from "react";
-import "./style.css";
-import { nanoid } from "nanoid";
-import data from "./mock-data.json";
-import Readonlyrow from "./Readonlyrow";
-import Editablerow from "./Editablerow";
-const DeptTable = () => {
-  const [contacts, setContacts] = useState(data);
+import * as React from "react";
+import { DataGrid } from "@mui/x-data-grid";
 
-  const [editFormData, setEditFormData] = useState({
-    id: "",
-    Subject_Code: "",
-    Subject_Number: "",
-    Template: "",
-    Syllabus: "",
-    Examiner1: "",
-    Examiner2: "",
-  });
+const columns = [
+  { field: "id", headerName: "ID", width: 90 },
+  {
+    field: "Subject_Code",
+    headerName: "Subject Code",
+    width: 150,
+    // editable: true,
+  },
+  {
+    field: "Subject_Number",
+    headerName: "Subject Number",
+    width: 150,
+    // editable: true,
+  },
+  {
+    field: "template",
+    headerName: "Template",
+    width: 110,
+    // editable: true,
+  },
+  {
+    field: "syllabus",
+    headerName: "Syllabus",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "examiner-1",
+    headerName: "Examiner 1",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "examiner-2",
+    headerName: "Examiner 2",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "commit",
+    headerName: "Commit",
+    width: 110,
+    renderCell: (params) => (
+      <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
+        Commit
+      </button>
+    ),
+  },
+];
 
-  const [editContactId, setEditContactID] = useState(null);
+const initialRows = [
+  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon", template: 35 },
+  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei", template: 42 },
+  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime", template: 45 },
+  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya", template: 16 },
+  {
+    id: 5,
+    Subject_Number: "Targaryen",
+    Subject_Code: "Daenerys",
+    template: null,
+  },
+  { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady", template: 150 },
+  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara", template: 44 },
+  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini", template: 36 },
+  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+];
 
-  const handleEditFormChange = (event) => {
-    event.preventDefault();
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
-    const newFormData = { ...editFormData };
-    newFormData[fieldName] = fieldValue;
+export default function DeptTable() {
+  const [rows, setRows] = React.useState(initialRows);
 
-    setEditFormData(newFormData);
-  };
+  // const handleAddRow = () => {
+  //   const newId = rows.length + 1;
+  //   setRows([
+  //     ...rows,
+  //     { id: newId, Subject_Number: "", Subject_Code: "", template: null },
+  //   ]);
+  // };
 
-  const handleEditFormSubmit = (event) => {
-    event.preventDefault();
-    const index = contacts.findIndex((contact) => contact.id === editContactId);
-    const editedContact = {
-      id: editContactId,
-      Subject_Code: contacts[index].Subject_Code,
-      Subject_Number: contacts[index].Subject_Number,
-      Template: contacts[index].Template,
-      Syllabus: editFormData.Syllabus,
-      Examiner1: editFormData.Examiner1,
-      Examiner2: editFormData.Examiner2,
-    };
-    const newContacts = [...contacts];
+  const data = React.useMemo(
+    () =>
+      rows.map(({ id, Subject_Code, Subject_Number, template }) => ({
+        id,
+        Subject_Code,
+        Subject_Number,
+        template,
+      })),
+    [rows]
+  );
 
   return (
-    <div className='app-container'>
-      <form onSubmit={handleEditFormSubmit}>
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Subject Code</th>
-              <th>Subject Number</th>
-              <th>Template</th>
-              <th>Syllabus</th>
-              <th>Examiner1</th>
-              <th>Examiner2</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contacts.map((contact) => (
-              <Fragment>
-                {editContactId === contact.id ? (
-                  <Editablerow
-                    contact={contact}
-                    editFormData={editFormData}
-                    handleEditFormChange={handleEditFormChange}
-                  />
-                ) : (
-                  <Readonlyrow
-                    contact={contact}
-                    handleEditClick={handleEditClick}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-      </form>
-    </div>
+    <>
+      <DataGrid
+        sx={{ alignItems: "center" }}
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        disableSelectionOnClick
+        hideFooterPagination
+        disableAddRow={true}
+        onEditCellChangeCommitted={(params, event) => {
+          const { id, field, value } = params;
+          setRows(
+            rows.map((row) =>
+              row.id === id ? { ...row, [field]: value } : row
+            )
+          );
+        }}
+      />
+      {/* <div sx={{ alignItems: "center" }}>
+        <button onClick={handleAddRow}>Add Row</button>
+      </div> */}
+    </>
   );
-};
+}
 
-export default DeptTable;
+// import { useState } from "react";
+
+// function Table() {
+//   const [data, setData] = useState([
+//     {
+//       id: 1,
+//       Subject_Code: "John Doe",
+//       Subject_Number: "johndoe@example.com",
+//       Template: "abcd",
+//     },
+//     {
+//       id: 2,
+//       Subject_Code: "Jane Doe",
+//       Subject_Number: "janedoe@example.com",
+//       Template: "abcd",
+//     },
+//     {
+//       id: 3,
+//       Subject_Code: "Bob Smith",
+//       Subject_Number: "bobsmith@example.com",
+//       Template: "abcd",
+//     },
+//   ]);
+
+//   const handleCellChange = (event, rowIndex, property) => {
+//     const newData = [...data];
+//     newData[rowIndex][property] = event.target.value;
+//     setData(newData);
+//   };
+
+//   return (
+//     <div className="app-container">
+//       <center>
+//         <table>
+//           <thead>
+//             <tr>
+//               <th>Id</th>
+//               <th>Subject Code</th>
+//               <th>Subject Number</th>
+//               <th>Template</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {data.map((row, rowIndex) => (
+//               <tr key={row.id}>
+//                 <td>{row.id}</td>
+//                 <td>
+//                   <input
+//                     type="text"
+//                     value={row.Subject_Code}
+//                     onChange={(event) =>
+//                       handleCellChange(event, rowIndex, "Subject_Code")
+//                     }
+//                   />
+//                 </td>
+//                 <td>
+//                   <input
+//                     type="text"
+//                     value={row.Subject_Number}
+//                     onChange={(event) =>
+//                       handleCellChange(event, rowIndex, "Subject_Number")
+//                     }
+//                   />
+//                 </td>
+//                 <td>
+//                   <input
+//                     type="text"
+//                     value={row.Template}
+//                     onChange={(event) =>
+//                       handleCellChange(event, rowIndex, "Template")
+//                     }
+//                   />
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </center>
+//     </div>
+//   );
+// }
+
+// export default Table;

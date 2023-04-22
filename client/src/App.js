@@ -5,6 +5,7 @@ import userContext from "./store/user/userContext";
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import styles from './App.module.css';
 import NavBar from './components/NavBar/NavBar';
+import DeptTable from './components/Department/DptTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = React.lazy(() => import('./pages/Login/Login'));
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" exact element={<Table />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<Signup />} />
+            <Route path="/department" exact element={<DeptTable />} />
           </Routes>
         </Suspense>
       </main>
