@@ -43,20 +43,6 @@ const DeptTable = () => {
     };
     const newContacts = [...contacts];
 
-    newContacts[index] = editedContact;
-    setContacts(newContacts);
-    setEditContactID(null);
-  };
-  const handleEditClick = (event, contact) => {
-    event.preventDefault();
-    setEditContactID(contact.id);
-    const formValues = {
-      Syllabus: contact.Syllabus,
-      Examiner1: contact.Examiner1,
-      Examiner2: contact.Examiner2,
-    };
-    setEditFormData(formValues);
-  };
   return (
     <div className='app-container'>
       <form onSubmit={handleEditFormSubmit}>
