@@ -1,8 +1,8 @@
 import React from 'react'
 
-const NotAvailPage = () => {
+const NotAvailPage = ({ msg }) => {
     return (
-        <div>NotAvailPage</div>
+        <div>{msg}</div>
     )
 }
 

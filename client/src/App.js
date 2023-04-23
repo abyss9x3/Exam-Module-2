@@ -7,22 +7,28 @@ import styles from './App.module.css';
 import NavBar from './components/NavBar/NavBar';
 import DeptTable from './components/Department/DptTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { isUserAdmin, isUserExamController, isUserExamOfficer, isUserHOD, isUserMember } from "./store/user/userUtils";
 import NotAvailPage from "./components/NotAvailPage/NotAvailPage";
 
 const Login = React.lazy(() => import('./pages/Login/Login'));
 const Signup = React.lazy(() => import('./pages/Signup/Signup'));
-const Home = React.lazy(() => import('./pages/Home/Home'));
-
+const DeptSelect = React.lazy(() => import("./components/DeptSelect/DeptSelect"));
 
 const SplashRoute = ({ user }) => {
     if (user.isLoading) return <LoadingSpinner />
-    else if (!user.loggedIn) return <Redirect to="/login" />
+    else if (!user.loggedIn) return <Navigate to="/login" />
 
-    if (isUserExamOfficer(user.designation) && user.phase === 1) {
-        // return dept selection page for examofficer
-        // and then examofficetable
+    if (isUserExamOfficer(user.designation)) {
+        if (user.phase === 1) {
+            return <Navigate to="/deptSelect" />
+        }
+        else if (user.phase === 4) {
+            return <NotAvailPage msg="You have approved, wait for ExamController Approval to download Excel Sheet" />
+        }
+        else if (user.phase === 5) {
+            return <Navigate to="/excel" />
+        }
     }
     else if ((isUserHOD(user.designation) || isUserMember(user.designation))) {
         if (user.phase === 1)
@@ -32,33 +38,12 @@ const SplashRoute = ({ user }) => {
         else return <NotAvailPage msg="You have submitted examiners !" />
     }
 
-    switch (user.phase) {
-        case 1: {
-            break;
-        }
-        case 2: {
-            break;
-        }
-        case 3: {
-            break;
-        }
-        case 4: {
-            break;
-        }
-        case 5: {
-            break;
-        }
-        default: {
-            break;
-        }
-    }
-
     if (isUserExamController(user.designation)) return <></>
     else if (isUserAdmin(user.designation)) return <></>
-    else return <Redirect to="/login" />
+    else return <Navigate to="/login" />
 }
 
-function App() {
+const App = () => {
 
     /** @type {import("./store/user/userContext").ContextType} */
     const { user, getLoggedIn } = useContext(userContext);
@@ -80,10 +65,10 @@ function App() {
                         <Route path="/" exact element={<SplashRoute user={user} />} />
                         <Route path="/login" exact element={<Login />} />
                         <Route path="/signup" exact element={<Signup />} />
+                        <Route path="/deptSelect" exact element={<DeptSelect />} />
 
-                        {/* ---- Dev routes ---- */}
-                        <Route path="/table" exact element={<Table />} />
-                        <Route path="/department" exact element={<DeptTable />} />
+                        <Route path="/examoffice/table/:id" exact element={<Table />} />
+                        <Route path="/department/table" exact element={<DeptTable />} />
                     </Routes>
                 </Suspense>
             </main>
