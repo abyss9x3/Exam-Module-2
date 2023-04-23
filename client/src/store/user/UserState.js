@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import UserContext from './userContext';
 import { SERVER_LINK } from './../../dev-server-link';
 
