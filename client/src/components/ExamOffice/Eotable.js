@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -21,16 +22,6 @@ const columns = [
     width: 110,
     editable: true,
   },
-  // {
-  //   field: "commit",
-  //   headerName: "Commit",
-  //   width: 110,
-  //   renderCell: (params) => (
-  //     <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
-  //       Commit
-  //     </button>
-  //   ),
-  // },
 ];
 
 const initialRows = [
@@ -48,6 +39,12 @@ const initialRows = [
   { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara", template: 44 },
   { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini", template: 36 },
   { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 10, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 11, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 12, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 13, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 14, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
+  { id: 15, Subject_Number: "Roxie", Subject_Code: "Harvey", template: 65 },
 ];
 
 export default function DataGridDemo() {
@@ -73,7 +70,7 @@ export default function DataGridDemo() {
   );
 
   return (
-    <>
+    <Box>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -81,8 +78,8 @@ export default function DataGridDemo() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        disableColumnMenu 
-        disableColumnSort 
+        disableColumnMenu
+        disableColumnSort
         sortColumnDirection="asc"
         hideFooterPagination
         onEditCellChangeCommitted={(params, event) => {
@@ -94,10 +91,20 @@ export default function DataGridDemo() {
           );
         }}
       />
-      <div sx={{ alignItems: "center" }}>
+      <Box
+        sx={{
+          position: "absolute",
+          backgroundColor: "white",
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          right: '0'
+        }}
+      >
         <button onClick={handleAddRow}>Add Row</button>
-      </div>
-    </>
+        <button onClick={() => console.log("Commit")}>Commit</button>
+      </Box>
+    </Box>
   );
 }
 
