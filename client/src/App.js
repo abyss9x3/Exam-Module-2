@@ -20,7 +20,7 @@ const SplashRoute = ({ user }) => {
     else if (!user.loggedIn) return <Navigate to="/login" />
 
     if (isUserExamOfficer(user.designation)) {
-        if (user.phase === 1) {
+        if ([1, 2, 3].includes(user.phase)) {
             return <Navigate to="/deptSelect" />
         }
         else if (user.phase === 4) {

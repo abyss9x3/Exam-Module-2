@@ -154,7 +154,7 @@ const initiateApprovalTable = async deptNames => {
 const getOverallDeptStatus = async () => {
     const [rows] = await sqlDatabase.execute("select sentStatus from Approval");
     for (let i = 0; i < rows.length; ++i)
-        if (rows[i] === '0' || rows[i] === 0)
+        if (rows[i].sentStatus === '0' || rows[i].sentStatus === 0)
             return false;
     return true;
 }
@@ -162,6 +162,11 @@ const getOverallDeptStatus = async () => {
 const getDeptStatus = async deptName => {
     const [rows] = await sqlDatabase.execute(`select sentStatus from Approval where DeptName="${deptName}"`);
     return rows[0];
+}
+
+const getAllDeptStatus = async () => {
+    const [rows] = await sqlDatabase.execute("select deptName, sentStatus from Approval");
+    return rows;
 }
 
 const postDeptStatus = async deptName => {
@@ -176,7 +181,7 @@ const getApproval1 = async deptName => {
 const getOverallApproval1 = async () => {
     const [rows] = await sqlDatabase.execute("select approval1 from Approval");
     for (let i = 0; i < rows.length; ++i)
-        if (rows[i] === '0' || rows[i] === 0)
+        if (rows[i].approval1 === '0' || rows[i].approval1 === 0)
             return false;
     return true;
 }
@@ -194,7 +199,7 @@ const getApproval2 = async deptName => {
 const getOverallApproval2 = async () => {
     const [rows] = await sqlDatabase.execute("select approval2 from Approval");
     for (let i = 0; i < rows.length; ++i)
-        if (rows[i] === '0' || rows[i] === 0)
+        if (rows[i].approval2 === '0' || rows[i].approval2 === 0)
             return false;
     return true;
 }
@@ -239,6 +244,6 @@ module.exports = {
     getApproval2, putApproval2, getExcellSheet,
     clearDatabase, getAllExaminers, initiateApprovalTable,
     getDepartmentTableWithoutCommits, getOverallDeptStatus,
-    getOverallApproval1, getOverallApproval2
+    getOverallApproval1, getOverallApproval2, getAllDeptStatus
 }
 

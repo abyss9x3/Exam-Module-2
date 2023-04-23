@@ -122,6 +122,19 @@ const getDeptStatus = async (req, res) => {
     }
 }
 
+const getAllDeptStatus = async (req, res) => {
+    try {
+        const deptStatus = await database.getAllDeptStatus();
+        const newarr = {};
+        deptStatus.forEach(ele => newarr[ele.deptName] = ele.sentStatus);
+        return res.status(200).json(newarr);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
+}
+
+
 const postDeptStatus = async (req, res) => {
     try {
         if (!req.body || !req.body.deptName) {
@@ -234,6 +247,7 @@ let phase1Ended = false;
 const phase1End = async (req, res) => {
     try {
         phase1Ended = true;
+        res.status(200).json("Send Successfully ! Phase 1 completed !");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -274,5 +288,5 @@ module.exports = {
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
     getDepartmentTableWithoutCommits, phase1End,
-    getPhase, sendAppointmentLetters
+    getPhase, sendAppointmentLetters, getAllDeptStatus
 }
