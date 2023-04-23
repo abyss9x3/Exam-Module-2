@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navigate } from "react-router-dom";
 import { isUserAdmin, isUserExamController, isUserExamOfficer, isUserHOD, isUserMember } from "./store/user/userUtils";
 import NotAvailPage from "./components/NotAvailPage/NotAvailPage";
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 
 const Login = React.lazy(() => import('./pages/Login/Login'));
 const Signup = React.lazy(() => import('./pages/Signup/Signup'));
@@ -37,9 +38,20 @@ const SplashRoute = ({ user }) => {
             return <DeptTable />
         else return <NotAvailPage msg="You have submitted examiners !" />
     }
-
-    if (isUserExamController(user.designation)) return <></>
-    else if (isUserAdmin(user.designation)) return <></>
+    else if (isUserExamController(user.designation)) {
+        if (user.phase === 1 || user.phase === 2) {
+            return <NotAvailPage msg="Table is not filled yet!" />
+        } else if (user.phase === 3) {
+            return <NotAvailPage msg="Table is filled by Dept, waiting for ExamOfficer's Approval !" />
+        } else if (user.phase === 4) {
+            return <Navigate to="/deptSelect" />
+        } else if (user.phase === 5) {
+            return <Navigate to="/excel" />
+        }
+    }
+    else if (isUserAdmin(user.designation)) {
+        return <AdminDashboard />
+    }
     else return <Navigate to="/login" />
 }
 
