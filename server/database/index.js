@@ -1,9 +1,7 @@
 const mysql = require('mysql2/promise');
 const { HOD, MEMBER, EXAMOFFICER, EXAMCONTROLLER } = require('./types');
 
-/**
-* @type {mysql.Connection}
-*/
+/** @type {mysql.Connection} */
 let sqlDatabase = null;
 
 const connectDB = async () => {
@@ -153,6 +151,14 @@ const initiateApprovalTable = async deptNames => {
     await sqlDatabase.execute(`insert into Approval (deptName, sentStatus, approval1, approval2) values ${str}`);
 }
 
+const getOverallDeptStatus = async () => {
+    const [rows] = await sqlDatabase.execute("select sentStatus from Approval");
+    for (let i = 0; i < rows.length; ++i)
+        if (rows[i] === '0' || rows[i] === 0)
+            return false;
+    return true;
+}
+
 const getDeptStatus = async deptName => {
     const [rows] = await sqlDatabase.execute(`select sentStatus from Approval where DeptName="${deptName}"`);
     return rows[0];
@@ -167,6 +173,15 @@ const getApproval1 = async deptName => {
     return rows[0];
 }
 
+const getOverallApproval1 = async () => {
+    const [rows] = await sqlDatabase.execute("select approval1 from Approval");
+    for (let i = 0; i < rows.length; ++i)
+        if (rows[i] === '0' || rows[i] === 0)
+            return false;
+    return true;
+}
+
+
 const putApproval1 = async deptName => {
     await sqlDatabase.execute(`update Approval set approval1=true where deptName="${deptName}"`);
 }
@@ -175,6 +190,15 @@ const getApproval2 = async deptName => {
     const [rows] = await sqlDatabase.execute(`select approval2 from Approval where DeptName="${deptName}"`);
     return rows[0];
 }
+
+const getOverallApproval2 = async () => {
+    const [rows] = await sqlDatabase.execute("select approval2 from Approval");
+    for (let i = 0; i < rows.length; ++i)
+        if (rows[i] === '0' || rows[i] === 0)
+            return false;
+    return true;
+}
+
 
 const putApproval2 = async deptName => {
     await sqlDatabase.execute(`update Approval set approval2=true where deptName="${deptName}"`);
@@ -214,6 +238,7 @@ module.exports = {
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet,
     clearDatabase, getAllExaminers, initiateApprovalTable,
-    getDepartmentTableWithoutCommits
+    getDepartmentTableWithoutCommits, getOverallDeptStatus,
+    getOverallApproval1, getOverallApproval2
 }
 

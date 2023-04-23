@@ -1,42 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const { loggingMiddleware, authValidator, authorizationHandler } = require('../middlewares');
+const { loggingMiddleware, authValidator, authorizationHandler, phaseValidator } = require('../middlewares');
 const {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers, getDepartmentTable,
     postDepartmentTable, commitRow, getDeptStatus,
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
-    getDepartmentTableWithoutCommits
+    getDepartmentTableWithoutCommits, phase1End, sendAppointmentLetters
 } = require('../controllers/explore');
 const { ADMIN, EXAMCONTROLLER, EXAMOFFICER, HOD, MEMBER } = require('../database/types');
 
 // /api/explore
 router
-    .get('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getDeptNames)
-    .post('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), postDeptNames)
+    .get('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([1, 2, 3, 4]), getDeptNames)
+    .post('/deptNames', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([1]), postDeptNames)
 
-    .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getDeptTableWithoutExaminers)
-    .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), postDeptTableWithoutExaminers)
+    .get('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([1]), getDeptTableWithoutExaminers)
+    .post('/deptTableWithoutExaminers', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([1]), postDeptTableWithoutExaminers)
 
-    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), getDepartmentTable)
-    .post('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([HOD, EXAMOFFICER, EXAMCONTROLLER]), postDepartmentTable)
+    .post('/phase1end', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([1]), phase1End)
 
-    .get('/departmentTableWithoutCommits', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getDepartmentTableWithoutCommits)
+    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), phaseValidator([2]), getDepartmentTable)
+    .post('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([HOD, EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3, 4]), postDepartmentTable)
 
-    .post('/commitRow', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), commitRow)
+    .get('/departmentTableWithoutCommits', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3, 4]), getDepartmentTableWithoutCommits)
 
-    .get('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getDeptStatus)
-    .put('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([HOD]), postDeptStatus)
+    .post('/commitRow', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), phaseValidator([2]), commitRow)
 
-    .get('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getApproval1)
-    .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), putApproval1)
+    .get('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([2, 3]), getDeptStatus)
+    .put('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([HOD]), phaseValidator([2]), postDeptStatus)
 
-    .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), getApproval2)
-    .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), putApproval2)
+    .get('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([3]), getApproval1)
+    .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([3]), putApproval1)
 
-    .get('/excellSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getExcellSheet)
+    .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([4]), getApproval2)
+    .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([4]), putApproval2)
 
-    .delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), clearDatabase);
+    .get('/sendAppointmentLetters', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), sendAppointmentLetters)
+    .get('/excellSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), getExcellSheet)
+    .delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), phaseValidator([5]), clearDatabase);
 
 module.exports = router;

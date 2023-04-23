@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require('../database');
 const database = require("../database");
+const { getPhase } = require("./explore");
 
 const loginController = async (req, res) => {
     try {
@@ -59,7 +60,9 @@ const loggedInController = async (req, res) => {
             loginid, name, designation, deptName
         } = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
 
-        return res.status(200).json({ status: true, loginid, name, designation, deptName });
+        const phase = await getPhase(deptName);
+
+        return res.status(200).json({ status: true, loginid, name, designation, deptName, phase });
     } catch (err) {
         console.error(err);
         return res.status(200).json({ status: false });

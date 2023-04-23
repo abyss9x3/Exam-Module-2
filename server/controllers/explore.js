@@ -1,6 +1,5 @@
 const database = require('../database');
 const { sendApprovalLetters } = require('../mail');
-
 const data_exporter = require('json2csv').Parser;
 
 const getDeptNames = async (req, res) => {
@@ -182,6 +181,15 @@ const putApproval2 = async (req, res) => {
         }
         await database.putApproval2(req.body.deptName);
 
+        return res.status(200).json("Done");
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
+}
+
+const sendAppointmentLetters = async (req, res) => {
+    try {
         const allExaminers = await database.getAllExaminers();
         await sendApprovalLetters(allExaminers);
 
@@ -191,6 +199,7 @@ const putApproval2 = async (req, res) => {
         return res.status(400).json(error);
     }
 }
+
 
 const getExcellSheet = async (req, res) => {
     try {
@@ -220,11 +229,50 @@ const clearDatabase = async (req, res) => {
     }
 }
 
+let phase1Ended = false;
+
+const phase1End = async (req, res) => {
+    try {
+        phase1Ended = true;
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
+}
+
+const getPhase = async deptName => {
+    // checking phase 1
+    if (!phase1Ended) return 1;
+
+    // if M or HOD checking for phase 2 and above
+    if (deptName) {
+        const deptStatus = await database.getDeptStatus(deptName);
+        if (deptStatus === 1 || deptStatus === '1') return 3;
+        else if (deptStatus === 0 || deptStatus === '0') return 2;
+    }
+
+    // if EO, EC checking for phase 2
+    const overallStatus = await database.getOverallDeptStatus();
+    if (!overallStatus) return 2;
+
+    // checking for phase 3
+    const overallApproval1 = await database.getOverallApproval1();
+    if (!overallApproval1) return 3;
+
+    // checking for phase 4
+    const overallApproval2 = await database.getOverallApproval2();
+    if (!overallApproval2) return 4;
+
+    // phases ended !
+    return 5;
+}
+
 module.exports = {
     getDeptNames, postDeptNames, getDeptTableWithoutExaminers,
     postDeptTableWithoutExaminers, getDepartmentTable,
     postDepartmentTable, commitRow, getDeptStatus,
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
-    getDepartmentTableWithoutCommits
+    getDepartmentTableWithoutCommits, phase1End,
+    getPhase, sendAppointmentLetters
 }

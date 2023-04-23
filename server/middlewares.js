@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 const { User } = require('./database');
 const { HOD, MEMBER, ADMIN, EXAMCONTROLLER, EXAMOFFICER } = require("./database/types");
+const { getPhase } = require('./controllers/explore');
 
 const loginValidator = async (req, res, next) => {
 
@@ -127,6 +128,21 @@ const authorizationHandler = authorizedUsersList => {
     }
 }
 
+// create and return a middleware
+const phaseValidator = phaseList => {
+    // this middleware check if api call is allowed in currentPhase by checking phaseList
+    return async (req, res, next) => {
+        try {
+            const currentPhase = await getPhase(req.deptName);
+            if (!phaseList.includes(currentPhase)) throw new Error(("Can't call this api in current phase: " + currentPhase));
+            req.phase = currentPhase;
+            next();
+        } catch (error) {
+            res.status(401).json({ error });
+        }
+    }
+}
+
 const loggingMiddleware = (req, res, next) => {
     console.log(req.method, req.url);
     next();
@@ -135,5 +151,5 @@ const loggingMiddleware = (req, res, next) => {
 
 module.exports = {
     loginValidator, registerValidator, authValidator,
-    loggingMiddleware, authorizationHandler
+    loggingMiddleware, authorizationHandler, phaseValidator
 };

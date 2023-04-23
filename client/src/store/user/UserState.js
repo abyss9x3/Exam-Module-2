@@ -11,7 +11,8 @@ const initialState = {
     designation: undefined,
     deptName: undefined,
     isAdminRegistering: false,
-    registrationError: undefined
+    registrationError: undefined,
+    phase: undefined
 };
 
 // designation can be : member, hod, examofficer, examcontroller, admin
@@ -45,6 +46,8 @@ const UserState = props => {
                 prev.name = response.name || undefined;
                 prev.designation = response.designation || undefined;
                 prev.deptName = response.deptName || undefined;
+
+                prev.phase = response.phase || undefined;
 
                 return { ...prev };
             });
