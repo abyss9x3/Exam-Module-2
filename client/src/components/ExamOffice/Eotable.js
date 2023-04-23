@@ -81,6 +81,9 @@ export default function DataGridDemo() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
+        disableColumnMenu 
+        disableColumnSort 
+        sortColumnDirection="asc"
         hideFooterPagination
         onEditCellChangeCommitted={(params, event) => {
           const { id, field, value } = params;

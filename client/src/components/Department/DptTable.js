@@ -99,6 +99,9 @@ export default function DeptTable() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
+        disableColumnMenu 
+        disableColumnSort 
+        sortColumnDirection="asc"
         hideFooterPagination
         disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
