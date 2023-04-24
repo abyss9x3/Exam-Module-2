@@ -13,11 +13,7 @@ const columns = [
   },
   {
     field: "subNomenclature",
-<<<<<<< HEAD
     headerName: "Subject Nomenclature",
-=======
-    headerName: "Subject Number",
->>>>>>> fbb812a2c6dfc13715677585214bfa8de8e549e6
     width: 150,
     // editable: true,
   },
