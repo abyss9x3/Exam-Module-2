@@ -6,14 +6,14 @@ import './style.css'
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
-    field: "Subject_Code",
+    field: "subCode",
     headerName: "Subject Code",
     width: 150,
     // editable: true,
   },
   {
-    field: "Subject_Number",
-    headerName: "Subject Number",
+    field: "subNomenclature",
+    headerName: "Subject Nomenclature",
     width: 150,
     // editable: true,
   },
