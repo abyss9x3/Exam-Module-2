@@ -10,13 +10,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navigate } from "react-router-dom";
 import { isUserAdmin, isUserExamController, isUserExamOfficer, isUserHOD, isUserMember } from "./store/user/userUtils";
 import NotAvailPage from "./components/NotAvailPage/NotAvailPage";
-<<<<<<< HEAD
+
 import HODTable from "./components/HOD/hodphase2";
 import EOphase3 from "./components/ExamOffice/Eophase3";
 import ECphase4 from "./components/ExamController/ecphase4";
-=======
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
->>>>>>> 0211946f529426f308e3364feefcd41c74f4e564
 
 const Login = React.lazy(() => import('./pages/Login/Login'));
 const Signup = React.lazy(() => import('./pages/Signup/Signup'));
