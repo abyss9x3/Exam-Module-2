@@ -1,7 +1,7 @@
 import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRow } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
-import './style.css'
+import "./style.css";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -23,7 +23,7 @@ const columns = [
     width: 110,
     // editable: true,
     renderCell: (params) => (
-      <a href={params.value} target="_blank" rel="noopener noreferrer">
+      <a href={params.value} target='_blank' rel='noopener noreferrer'>
         View File
       </a>
     ),
@@ -35,7 +35,7 @@ const columns = [
     editable: true,
     renderCell: (params) => (
       <input
-        type="file"
+        type='file'
         onChange={(event) => {
           const file = event.target.files[0];
           const reader = new FileReader();
@@ -105,7 +105,6 @@ const initialRows = [
     id: 5,
     Subject_Number: "Targaryen",
     Subject_Code: "Daenerys",
-
   },
   { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady" },
   { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara" },
@@ -136,7 +135,7 @@ export default function DeptTable() {
   );
 
   return (
-    <>
+    <DataGrid>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -146,7 +145,7 @@ export default function DeptTable() {
         disableSelectionOnClick
         disableColumnMenu
         disableColumnSort
-        sortColumnDirection="asc"
+        sortColumnDirection='asc'
         hideFooterPagination
         disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
@@ -158,105 +157,19 @@ export default function DeptTable() {
           );
         }}
       />
-      <Box
-        sx={{
-          position: "absolute",
-          backgroundColor: "white",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          right: "0",
-        }}
-      >
-        {/* <button onClick={() => console.log("Commit")}>Commit</button> */}
-      </Box>
-      {/* <div sx={{ alignItems: "center" }}>
-        <button onClick={handleAddRow}>Add Row</button>
-      </div> */}
-    </>
+      <GridRow>
+        <Box
+          sx={{
+            position: "absolute",
+            backgroundColor: "white",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            right: "0",
+          }}
+        ></Box>
+      </GridRow>
+    </DataGrid>
+    // </>
   );
 }
-
-// import { useState } from "react";
-
-// function Table() {
-//   const [data, setData] = useState([
-//     {
-//       id: 1,
-//       Subject_Code: "John Doe",
-//       Subject_Number: "johndoe@example.com",
-//       Template: "abcd",
-//     },
-//     {
-//       id: 2,
-//       Subject_Code: "Jane Doe",
-//       Subject_Number: "janedoe@example.com",
-//       Template: "abcd",
-//     },
-//     {
-//       id: 3,
-//       Subject_Code: "Bob Smith",
-//       Subject_Number: "bobsmith@example.com",
-//       Template: "abcd",
-//     },
-//   ]);
-
-//   const handleCellChange = (event, rowIndex, property) => {
-//     const newData = [...data];
-//     newData[rowIndex][property] = event.target.value;
-//     setData(newData);
-//   };
-
-//   return (
-//     <div className="app-container">
-//       <center>
-//         <table>
-//           <thead>
-//             <tr>
-//               <th>Id</th>
-//               <th>Subject Code</th>
-//               <th>Subject Number</th>
-//               <th>Template</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {data.map((row, rowIndex) => (
-//               <tr key={row.id}>
-//                 <td>{row.id}</td>
-//                 <td>
-//                   <input
-//                     type="text"
-//                     value={row.Subject_Code}
-//                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "Subject_Code")
-//                     }
-//                   />
-//                 </td>
-//                 <td>
-//                   <input
-//                     type="text"
-//                     value={row.Subject_Number}
-//                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "Subject_Number")
-//                     }
-//                   />
-//                 </td>
-//                 <td>
-//                   <input
-//                     type="text"
-//                     value={row.Template}
-//                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "Template")
-//                     }
-//                   />
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </center>
-//     </div>
-//   );
-// }
-
-// export default Table;

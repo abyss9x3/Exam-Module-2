@@ -5,14 +5,14 @@ import Box from "@mui/material/Box";
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
-    field: "Subject_Code",
-    headerName: "Subject Code",
+    field: "subCode",
+    headerName: "Subject_Code",
     width: 150,
     editable: true,
   },
   {
-    field: "Subject_Number",
-    headerName: "Subject Number",
+    field: "subNomenclature",
+    headerName: "Subject_Number",
     width: 150,
     editable: true,
   },
@@ -23,7 +23,7 @@ const columns = [
     // editable: true,
     renderCell: (params) => (
       <input
-        type="file"
+        type='file'
         onChange={(event) => {
           const file = event.target.files[0];
           const reader = new FileReader();
@@ -43,7 +43,7 @@ const columns = [
     // editable: true,
     renderCell: (params) => (
       <input
-        type="file"
+        type='file'
         onChange={(event) => {
           const file = event.target.files[0];
           const reader = new FileReader();
@@ -57,7 +57,7 @@ const columns = [
     ),
   },
   {
-    field: "examiner-1",
+    field: "examiner1",
     headerName: "Examiner 1",
     width: 110,
     editable: true,
@@ -81,30 +81,30 @@ const columns = [
 ];
 
 const initialRows = [
-  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon"},
-  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei"},
-  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime"},
-  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya"},
+  { id: 1, subNomenclature: "Snow", subCode: "Jon" },
+  { id: 2, subNomenclature: "Lannister", subCode: "Cersei" },
+  { id: 3, subNomenclature: "Lannister", subCode: "Jaime" },
+  { id: 4, subNomenclature: "Stark", subCode: "Arya" },
   {
     id: 5,
-    Subject_Number: "Targaryen",
-    Subject_Code: "Daenerys"
+    subNomenclature: "Targaryen",
+    subCode: "Daenerys",
   },
-  { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady"},
-  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara"},
-  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini"},
-  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey"},
+  { id: 6, subNomenclature: "Melisandre", subCode: "Lady" },
+  { id: 7, subNomenclature: "Clifford", subCode: "Ferrara" },
+  { id: 8, subNomenclature: "Frances", subCode: "Rossini" },
+  { id: 9, subNomenclature: "Roxie", subCode: "Harvey" },
 ];
 
 export default function ECphase4() {
   const [rows, setRows] = React.useState(initialRows);
-//   const handleAddRow = () => {
-//     const newId = rows.length + 1;
-//     setRows([
-//       ...rows,
-//       { id: newId, Subject_Number: "", Subject_Code: "", null },
-//     ]);
-//   };
+  //   const handleAddRow = () => {
+  //     const newId = rows.length + 1;
+  //     setRows([
+  //       ...rows,
+  //       { id: newId, Subject_Number: "", Subject_Code: "", null },
+  //     ]);
+  //   };
   // const handleAddRow = () => {
   //   const newId = rows.length + 1;
   //   setRows([
@@ -115,10 +115,10 @@ export default function ECphase4() {
 
   const data = React.useMemo(
     () =>
-      rows.map(({ id, Subject_Code, Subject_Number, template }) => ({
+      rows.map(({ id, subCode, subNomenclature, template }) => ({
         id,
-        Subject_Code,
-        Subject_Number,
+        subCode,
+        subNomenclature,
         template,
       })),
     [rows]
@@ -135,7 +135,7 @@ export default function ECphase4() {
         disableSelectionOnClick
         disableColumnMenu
         disableColumnSort
-        sortColumnDirection="asc"
+        sortColumnDirection='asc'
         hideFooterPagination
         disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
