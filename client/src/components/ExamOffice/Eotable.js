@@ -39,25 +39,25 @@ const columns = [
 ];
 
 const initialRows = [
-  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon", },
-  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei" },
-  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime" },
-  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya" },
+  { id: 1, subNomenclature: "Snow", subCode: "Jon", },
+  { id: 2, subNomenclature: "Lannister", subCode: "Cersei" },
+  { id: 3, subNomenclature: "Lannister", subCode: "Jaime" },
+  { id: 4, subNomenclature: "Stark", subCode: "Arya" },
   {
     id: 5,
-    Subject_Number: "Targaryen",
-    Subject_Code: "Daenerys",
+    subNomenclature: "Targaryen",
+    subCode: "Daenerys",
   },
-  { id: 6, Subject_Number: "Melisandre", Subject_Code: null},
-  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara" },
-  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini" },
-  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 10, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 11, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 12, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 13, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 14, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 15, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
+  { id: 6, subNomenclature: "Melisandre", subCode: null},
+  { id: 7, subNomenclature: "Clifford", subCode: "Ferrara" },
+  { id: 8, subNomenclature: "Frances", subCode: "Rossini" },
+  { id: 9, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 10, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 11, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 12, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 13, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 14, subNomenclature: "Roxie", subCode: "Harvey",  },
+  { id: 15, subNomenclature: "Roxie", subCode: "Harvey",  },
 ];
 
 export default function DataGridDemo() {
@@ -67,16 +67,16 @@ export default function DataGridDemo() {
     const newId = rows.length + 1;
     setRows([
       ...rows,
-      { id: newId, Subject_Number: "", Subject_Code: "" },
+      { id: newId, subNomenclature: "", subCode: "" },
     ]);
   };
 
   const data = React.useMemo(
     () =>
-      rows.map(({ id, Subject_Code, Subject_Number, template }) => ({
+      rows.map(({ id, subCode, subNomenclature, template }) => ({
         id,
-        Subject_Code,
-        Subject_Number,
+        subCode,
+        subNomenclature,
         template,
       })),
     [rows]
@@ -127,20 +127,20 @@ export default function DataGridDemo() {
 //   const [data, setData] = useState([
 //     {
 //       id: 1,
-//       Subject_Code: "John Doe",
-//       Subject_Number: "johndoe@example.com",
+//       subCode: "John Doe",
+//       subNomenclature: "johndoe@example.com",
 //       Template: "abcd",
 //     },
 //     {
 //       id: 2,
-//       Subject_Code: "Jane Doe",
-//       Subject_Number: "janedoe@example.com",
+//       subCode: "Jane Doe",
+//       subNomenclature: "janedoe@example.com",
 //       Template: "abcd",
 //     },
 //     {
 //       id: 3,
-//       Subject_Code: "Bob Smith",
-//       Subject_Number: "bobsmith@example.com",
+//       subCode: "Bob Smith",
+//       subNomenclature: "bobsmith@example.com",
 //       Template: "abcd",
 //     },
 //   ]);
@@ -170,18 +170,18 @@ export default function DataGridDemo() {
 //                 <td>
 //                   <input
 //                     type="text"
-//                     value={row.Subject_Code}
+//                     value={row.subCode}
 //                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "Subject_Code")
+//                       handleCellChange(event, rowIndex, "subCode")
 //                     }
 //                   />
 //                 </td>
 //                 <td>
 //                   <input
 //                     type="text"
-//                     value={row.Subject_Number}
+//                     value={row.subNomenclature}
 //                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "Subject_Number")
+//                       handleCellChange(event, rowIndex, "subNomenclature")
 //                     }
 //                   />
 //                 </td>
