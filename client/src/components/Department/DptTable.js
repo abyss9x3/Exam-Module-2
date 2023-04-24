@@ -2,6 +2,8 @@ import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import './style.css'
+import { SERVER_LINK } from "../../dev-server-link";
+
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -13,11 +15,7 @@ const columns = [
   },
   {
     field: "subNomenclature",
-<<<<<<< HEAD
     headerName: "Subject Nomenclature",
-=======
-    headerName: "Subject Number",
->>>>>>> fbb812a2c6dfc13715677585214bfa8de8e549e6
     width: 150,
     // editable: true,
   },
@@ -54,7 +52,7 @@ const columns = [
   },
   {
     field: "examiner1_name",
-    headerName: "Examiner1 Name",
+    headerName: "Examiner2 Name",
     width: 110,
     editable: true,
   },
@@ -101,45 +99,46 @@ const columns = [
 ];
 
 const initialRows = [
-  { id: 1, subNomenclature: "Snow", subCode: "Jon" },
-  { id: 2, subNomenclature: "Lannister", subCode: "Cersei" },
-  { id: 3, subNomenclature: "Lannister", subCode: "Jaime" },
-  { id: 4, subNomenclature: "Stark", subCode: "Arya" },
+  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon" },
+  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei" },
+  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime" },
+  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya" },
   {
     id: 5,
-    subNomenclature: "Targaryen",
-    subCode: "Daenerys",
+    Subject_Number: "Targaryen",
+    Subject_Code: "Daenerys",
 
   },
-  { id: 6, subNomenclature: "Melisandre", subCode: "Lady" },
-  { id: 7, subNomenclature: "Clifford", subCode: "Ferrara" },
-  { id: 8, subNomenclature: "Frances", subCode: "Rossini" },
-  { id: 9, subNomenclature: "Roxie", subCode: "Harvey" },
+  { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady" },
+  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara" },
+  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini" },
+  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey" },
 ];
 
 export default function DeptTable() {
   const [rows, setRows] = React.useState(initialRows);
+  const [err, setErr] = React.useState(undefined);
+  const [loading, setLoading] = React.useState(false);
 
-  // const handleAddRow = () => {
-  //   const newId = rows.length + 1;
-  //   setRows([
-  //     ...rows,
-  //     { id: newId, subNomenclature: "", subCode: "", null },
-  //   ]);
-  // };
-
-  const data = React.useMemo(
-    () =>
-      rows.map(({ id, subCode, subNomenclature, template }) => ({
-        id,
-        subCode,
-        subNomenclature,
-        template,
-      })),
-    [rows]
-  );
-
+  React.useEffect(() =>{
+    setLoading(true)
+    fetch(`${SERVER_LINK}/api/explore/departmentTable`, { method: "GET", credentials: "include" })
+    .then(async res => {
+        if (res.ok) return res.json()
+        const json = await res.json();
+        return await Promise.reject(json);
+    })
+    .then(res => {
+        setRows(res);
+    })
+    .catch(err => {
+        setErr(JSON.stringify(err));
+    }).finally(() => {
+        setLoading(false)
+    });
+  }, []);
   return (
+    
     <>
       <DataGrid
         sx={{ alignItems: "center" }}
@@ -187,20 +186,20 @@ export default function DeptTable() {
 //   const [data, setData] = useState([
 //     {
 //       id: 1,
-//       subCode: "John Doe",
-//       subNomenclature: "johndoe@example.com",
+//       Subject_Code: "John Doe",
+//       Subject_Number: "johndoe@example.com",
 //       Template: "abcd",
 //     },
 //     {
 //       id: 2,
-//       subCode: "Jane Doe",
-//       subNomenclature: "janedoe@example.com",
+//       Subject_Code: "Jane Doe",
+//       Subject_Number: "janedoe@example.com",
 //       Template: "abcd",
 //     },
 //     {
 //       id: 3,
-//       subCode: "Bob Smith",
-//       subNomenclature: "bobsmith@example.com",
+//       Subject_Code: "Bob Smith",
+//       Subject_Number: "bobsmith@example.com",
 //       Template: "abcd",
 //     },
 //   ]);
@@ -230,18 +229,18 @@ export default function DeptTable() {
 //                 <td>
 //                   <input
 //                     type="text"
-//                     value={row.subCode}
+//                     value={row.Subject_Code}
 //                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "subCode")
+//                       handleCellChange(event, rowIndex, "Subject_Code")
 //                     }
 //                   />
 //                 </td>
 //                 <td>
 //                   <input
 //                     type="text"
-//                     value={row.subNomenclature}
+//                     value={row.Subject_Number}
 //                     onChange={(event) =>
-//                       handleCellChange(event, rowIndex, "subNomenclature")
+//                       handleCellChange(event, rowIndex, "Subject_Number")
 //                     }
 //                   />
 //                 </td>
