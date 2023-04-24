@@ -8,19 +8,30 @@ const columns = [
     field: "Subject_Code",
     headerName: "Subject Code",
     width: 150,
-    editable: true,
+    // editable: true,
   },
   {
     field: "Subject_Number",
     headerName: "Subject Number",
     width: 150,
-    editable: true,
+    // editable: true,
   },
   {
     field: "template",
     headerName: "Template",
     width: 110,
     // editable: true,
+    renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          View File
+        </a>
+      ),
+  },
+  {
+    field: "syllabus",
+    headerName: "Syllabus",
+    width: 110,
+    editable: true,
     renderCell: (params) => (
       <input
         type="file"
@@ -36,11 +47,33 @@ const columns = [
       />
     ),
   },
+  {
+    field: "examiner-1",
+    headerName: "Examiner 1",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "examiner-2",
+    headerName: "Examiner 2",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "commit",
+    headerName: "Commit",
+    width: 110,
+    renderCell: (params) => (
+      <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
+        Commit
+      </button>
+    ),
+  },
 ];
 
 const initialRows = [
-  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon", },
-  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei" },
+  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon" },
+  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei"},
   { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime" },
   { id: 4, Subject_Number: "Stark", Subject_Code: "Arya" },
   {
@@ -48,28 +81,28 @@ const initialRows = [
     Subject_Number: "Targaryen",
     Subject_Code: "Daenerys",
   },
-  { id: 6, Subject_Number: "Melisandre", Subject_Code: null},
-  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara" },
-  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini" },
-  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 10, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 11, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 12, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 13, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 14, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 15, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
+  { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady"},
+  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara"},
+  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini"},
+  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey"},
 ];
 
-export default function DataGridDemo() {
+export default function HODTable() {
   const [rows, setRows] = React.useState(initialRows);
-
-  const handleAddRow = () => {
-    const newId = rows.length + 1;
-    setRows([
-      ...rows,
-      { id: newId, Subject_Number: "", Subject_Code: "" },
-    ]);
-  };
+//   const handleAddRow = () => {
+//     const newId = rows.length + 1;
+//     setRows([
+//       ...rows,
+//       { id: newId, Subject_Number: "", Subject_Code: "", null },
+//     ]);
+//   };
+  // const handleAddRow = () => {
+  //   const newId = rows.length + 1;
+  //   setRows([
+  //     ...rows,
+  //     { id: newId, Subject_Number: "", Subject_Code: "", null },
+  //   ]);
+  // };
 
   const data = React.useMemo(
     () =>
@@ -83,7 +116,7 @@ export default function DataGridDemo() {
   );
 
   return (
-    <Box>
+    <>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -95,6 +128,7 @@ export default function DataGridDemo() {
         disableColumnSort
         sortColumnDirection="asc"
         hideFooterPagination
+        disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
           const { id, field, value } = params;
           setRows(
@@ -111,13 +145,16 @@ export default function DataGridDemo() {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          right: '0'
+          right: "0",
         }}
       >
-        <button onClick={handleAddRow}>Add Row</button>
         <button onClick={() => console.log("Commit")}>Commit</button>
+        <button onClick={() => console.log("Send")}>Send</button>
       </Box>
-    </Box>
+      {/* <div sx={{ alignItems: "center" }}>
+        <button onClick={handleAddRow}>Add Row</button>
+      </div> */}
+    </>
   );
 }
 

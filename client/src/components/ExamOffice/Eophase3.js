@@ -22,54 +22,96 @@ const columns = [
     width: 110,
     // editable: true,
     renderCell: (params) => (
-      <input
-        type="file"
-        onChange={(event) => {
-          const file = event.target.files[0];
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            const dataUrl = reader.result;
-            params.setValue(dataUrl);
-          };
-        }}
-      />
-    ),
+        <input
+          type="file"
+          onChange={(event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const dataUrl = reader.result;
+              params.setValue(dataUrl);
+            };
+          }}
+        />
+      ),
   },
+  {
+    field: "syllabus",
+    headerName: "Syllabus",
+    width: 110,
+    // editable: true,
+    renderCell: (params) => (
+        <input
+          type="file"
+          onChange={(event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const dataUrl = reader.result;
+              params.setValue(dataUrl);
+            };
+          }}
+        />
+      ),
+  },
+  {
+    field: "examiner-1",
+    headerName: "Examiner 1",
+    width: 110,
+    editable: true,
+  },
+  {
+    field: "examiner-2",
+    headerName: "Examiner 2",
+    width: 110,
+    editable: true,
+  },
+//   {
+//     field: "commit",
+//     headerName: "Commit",
+//     width: 110,
+//     renderCell: (params) => (
+//       <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
+//         Commit
+//       </button>
+//     ),
+//   },
 ];
 
 const initialRows = [
-  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon", },
-  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei" },
-  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime" },
-  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya" },
+  { id: 1, Subject_Number: "Snow", Subject_Code: "Jon"},
+  { id: 2, Subject_Number: "Lannister", Subject_Code: "Cersei"},
+  { id: 3, Subject_Number: "Lannister", Subject_Code: "Jaime"},
+  { id: 4, Subject_Number: "Stark", Subject_Code: "Arya"},
   {
     id: 5,
     Subject_Number: "Targaryen",
-    Subject_Code: "Daenerys",
+    Subject_Code: "Daenerys"
   },
-  { id: 6, Subject_Number: "Melisandre", Subject_Code: null},
-  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara" },
-  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini" },
-  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 10, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 11, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 12, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 13, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 14, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
-  { id: 15, Subject_Number: "Roxie", Subject_Code: "Harvey",  },
+  { id: 6, Subject_Number: "Melisandre", Subject_Code: "Lady"},
+  { id: 7, Subject_Number: "Clifford", Subject_Code: "Ferrara"},
+  { id: 8, Subject_Number: "Frances", Subject_Code: "Rossini"},
+  { id: 9, Subject_Number: "Roxie", Subject_Code: "Harvey"},
 ];
 
-export default function DataGridDemo() {
+export default function EOphase3() {
   const [rows, setRows] = React.useState(initialRows);
-
-  const handleAddRow = () => {
-    const newId = rows.length + 1;
-    setRows([
-      ...rows,
-      { id: newId, Subject_Number: "", Subject_Code: "" },
-    ]);
-  };
+//   const handleAddRow = () => {
+//     const newId = rows.length + 1;
+//     setRows([
+//       ...rows,
+//       { id: newId, Subject_Number: "", Subject_Code: "", null },
+//     ]);
+//   };
+  // const handleAddRow = () => {
+  //   const newId = rows.length + 1;
+  //   setRows([
+  //     ...rows,
+  //     { id: newId, Subject_Number: "", Subject_Code: "", null },
+  //   ]);
+  // };
 
   const data = React.useMemo(
     () =>
@@ -83,7 +125,7 @@ export default function DataGridDemo() {
   );
 
   return (
-    <Box>
+    <>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -91,10 +133,11 @@ export default function DataGridDemo() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        disableColumnMenu
-        disableColumnSort
+        disableColumnMenu 
+        disableColumnSort 
         sortColumnDirection="asc"
         hideFooterPagination
+        disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
           const { id, field, value } = params;
           setRows(
@@ -114,10 +157,9 @@ export default function DataGridDemo() {
           right: '0'
         }}
       >
-        <button onClick={handleAddRow}>Add Row</button>
         <button onClick={() => console.log("Commit")}>Commit</button>
       </Box>
-    </Box>
+    </>
   );
 }
 

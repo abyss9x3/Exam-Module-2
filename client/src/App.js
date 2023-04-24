@@ -10,6 +10,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navigate } from "react-router-dom";
 import { isUserAdmin, isUserExamController, isUserExamOfficer, isUserHOD, isUserMember } from "./store/user/userUtils";
 import NotAvailPage from "./components/NotAvailPage/NotAvailPage";
+import HODTable from "./components/HOD/hodphase2";
+import EOphase3 from "./components/ExamOffice/Eophase3";
+import ECphase4 from "./components/ExamController/ecphase4";
 
 const Login = React.lazy(() => import('./pages/Login/Login'));
 const Signup = React.lazy(() => import('./pages/Signup/Signup'));
@@ -66,6 +69,9 @@ const App = () => {
                         <Route path="/login" exact element={<Login />} />
                         <Route path="/signup" exact element={<Signup />} />
                         <Route path="/deptSelect" exact element={<DeptSelect />} />
+                        <Route path="/hodphase2" exact element={<HODTable />} />
+                        <Route path="/eophase3" exact element={<EOphase3 />} />
+                        <Route path="/ecphase4" exact element={<ECphase4 />} />
 
                         <Route path="/examoffice/table/:id" exact element={<Table />} />
                         <Route path="/department/table" exact element={<DeptTable />} />
