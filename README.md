@@ -9,5 +9,5 @@ Submitted by:
     YASHRAJ SOLANKI (0801IT201101)
 
 Mentored by:
-    Dr. Lalit Purohit
-    Mr. Upendra Singh
+    DR.  LALIT PUROHIT
+    MR. UPENDRA SINGH
