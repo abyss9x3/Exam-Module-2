@@ -5,13 +5,13 @@ import Box from "@mui/material/Box";
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
-    field: "Subject_Code",
+    field: "subCode",
     headerName: "Subject Code",
     width: 150,
     editable: true,
   },
   {
-    field: "Subject_Number",
+    field: "subNomenclature",
     headerName: "Subject Number",
     width: 150,
     editable: true,
