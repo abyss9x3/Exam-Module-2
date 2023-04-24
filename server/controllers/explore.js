@@ -162,7 +162,6 @@ const getApproval1 = async (req, res) => {
 }
 
 const getAllApproval1 = async (req, res) => {
-    console.log("here -----------------------------------")
     try {
         const approval1 = await database.getAllApproval1();
         const newobj = {};

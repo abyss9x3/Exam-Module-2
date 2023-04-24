@@ -113,7 +113,7 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
                 }}>
                     <h1 style={{ padding: "1.5rem" }}>Done Filling Data ?</h1>
-                    <Button variant="contained" sx={{ width: "9rem" }} endIcon={loading ? <HourglassTop /> : <Send />} onClick={phaseOneCompletion}>
+                    <Button variant="contained" sx={{ width: "9rem" }} endIcon={loading.send ? <HourglassTop /> : <Send />} onClick={phaseOneCompletion}>
                         Send
                     </Button>
                 </div>
@@ -127,8 +127,10 @@ const DeptSelect = () => {
     const { user } = useContext(userContext);
 
     const { loading, error, value: deptNames } = useFetch(`${SERVER_LINK}/api/explore/deptNames`, { method: "GET" });
-    let { loading: loadingStatus, value: deptStatus } = useFetch(`${SERVER_LINK}/api/explore/allDeptStatus`, { method: "GET" });
-    let { loading: loadingApproval1, value: approval1 } = useFetch(`${SERVER_LINK}/api/explore/allApproval1`, { method: "GET" });
+    let { loading: loadingStatus, value: deptStatus }
+        = useFetch(`${SERVER_LINK}/api/explore/allDeptStatus`, { method: "GET" }, undefined, (user.phase === 1));
+    let { loading: loadingApproval1, value: approval1 }
+        = useFetch(`${SERVER_LINK}/api/explore/allApproval1`, { method: "GET" }, undefined, (user.phase === 1));
 
     if (user.phase === 1) {
         deptStatus = undefined;
@@ -136,12 +138,10 @@ const DeptSelect = () => {
 
         loadingApproval1 = false;
         approval1 = undefined;
-    } else {
-    }
+    } else { }
 
     return (
         <div>
-
             {(loading || loadingStatus || loadingApproval1) ? <LoadingSpinner /> :
                 (error ? <div>{JSON.stringify(error)}</div> : <DeptSelectComponent user={user} deptNames={deptNames} approval1={approval1} deptStatus={deptStatus} />)
             }

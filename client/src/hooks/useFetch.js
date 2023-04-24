@@ -9,19 +9,25 @@ const DEFAULT_OPTIONS = {
 * @param {String} url - Endpoint
 * @param {Object} options - Should be memoized ! (with useMemo hook)
 */
-const useFetch = (url, options = {}, dependencies = []) => {
+const useFetch = (url, options = {}, dependencies = [], dontRun) => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(undefined);
     const [value, setValue] = useState(undefined);
 
     useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
+
+        if (dontRun) {
+            setLoading(false);
+            return;
+        }
 
         setLoading(true);
         setError(undefined);
         setValue(undefined);
+
+        const controller = new AbortController();
+        const signal = controller.signal;
 
         fetch(url, { signal, ...DEFAULT_OPTIONS, ...options })
             .then(async res => {
