@@ -161,6 +161,20 @@ const getApproval1 = async (req, res) => {
     }
 }
 
+const getAllApproval1 = async (req, res) => {
+    console.log("here -----------------------------------")
+    try {
+        const approval1 = await database.getAllApproval1();
+        const newobj = {};
+        approval1.forEach(ele => newobj[ele.deptName] = ele.approval1);
+        return res.status(200).json(newobj);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
+}
+
+
 const putApproval1 = async (req, res) => {
     try {
         if (!req.body || !req.body.deptName) {
@@ -288,5 +302,6 @@ module.exports = {
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
     getDepartmentTableWithoutCommits, phase1End,
-    getPhase, sendAppointmentLetters, getAllDeptStatus
+    getPhase, sendAppointmentLetters, getAllDeptStatus,
+    getAllApproval1
 }

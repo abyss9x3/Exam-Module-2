@@ -1,6 +1,8 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
+import './style.css'
+
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
@@ -118,8 +120,8 @@ export default function DeptTable() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        disableColumnMenu 
-        disableColumnSort 
+        disableColumnMenu
+        disableColumnSort
         sortColumnDirection="asc"
         hideFooterPagination
         disableAddRow={true}

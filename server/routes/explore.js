@@ -8,7 +8,7 @@ const {
     postDeptStatus, getApproval1, putApproval1,
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
     getDepartmentTableWithoutCommits, phase1End, sendAppointmentLetters,
-    getAllDeptStatus
+    getAllDeptStatus, getAllApproval1
 } = require('../controllers/explore');
 const { ADMIN, EXAMCONTROLLER, EXAMOFFICER, HOD, MEMBER } = require('../database/types');
 
@@ -33,11 +33,12 @@ router
     .get('/allDeptStatus', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), getAllDeptStatus)
     .put('/deptStatus', loggingMiddleware, authValidator, authorizationHandler([HOD]), phaseValidator([2]), postDeptStatus)
 
-    .get('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([3]), getApproval1)
-    .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([3]), putApproval1)
+    .get('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3]), getApproval1)
+    .get('/allApproval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3]), getAllApproval1)
+    .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([2, 3]), putApproval1)
 
-    .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([4]), getApproval2)
-    .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([4]), putApproval2)
+    .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([3, 4]), getApproval2)
+    .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([3, 4]), putApproval2)
 
     .get('/sendAppointmentLetters', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), sendAppointmentLetters)
     .get('/excellSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), getExcellSheet)
