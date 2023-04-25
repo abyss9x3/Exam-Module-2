@@ -134,11 +134,11 @@ const phaseValidator = phaseList => {
     return async (req, res, next) => {
         try {
             const currentPhase = await getPhase(req.deptName);
-            if (!phaseList.includes(currentPhase)) throw new Error(("Can't call this api in current phase: " + currentPhase));
+            if (!phaseList.includes(currentPhase)) throw new Error("Can't call this api in current phase: " + currentPhase);
             req.phase = currentPhase;
             next();
         } catch (error) {
-            res.status(401).json({ error });
+            res.status(401).json("Phase Validation Error: " + error.message);
         }
     }
 }
