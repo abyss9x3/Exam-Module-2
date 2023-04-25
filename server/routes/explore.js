@@ -22,7 +22,7 @@ router
 
     .post('/phase1end', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([1]), phase1End)
 
-    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), phaseValidator([2]), getDepartmentTable)
+    .get('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([MEMBER, HOD]), phaseValidator([1,2]), getDepartmentTable)
     .post('/departmentTable', loggingMiddleware, authValidator, authorizationHandler([HOD, EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3, 4]), postDepartmentTable)
 
     .get('/departmentTableWithoutCommits', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([2, 3, 4]), getDepartmentTableWithoutCommits)
