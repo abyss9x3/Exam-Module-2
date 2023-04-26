@@ -267,7 +267,7 @@ const clearDatabase = async (req, res) => {
     }
 }
 
-let phase1Ended = true;
+let phase1Ended = false;
 
 const phase1End = async (req, res) => {
     try {
