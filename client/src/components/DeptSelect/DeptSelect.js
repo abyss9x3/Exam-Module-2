@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SERVER_LINK } from './../../dev-server-link';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
@@ -16,7 +16,7 @@ const DeptBtn = ({ deptName, status, onClick }) => {
     );
 }
 
-const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
+const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1, approval2, reloadApproval2, reloadDeptNames, reloadDeptStatus, reloadApproval1, getLoggedIn }) => {
 
     const navigator = useNavigate();
     const [loading, setLoading] = useState({
@@ -42,6 +42,7 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
             })
             .then(res => {
                 alert(res);
+                reloadApproval1();
             })
             .catch(err => {
                 alert(JSON.stringify(err));
@@ -54,7 +55,29 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
     }
     const handleApproval2Click = (event, deptName) => {
         event.preventDefault();
-        console.log(`Approval 1 for ${deptName}`);
+
+        setLoading(prev => {
+            prev.approval2[deptName] = true;
+            return { send: prev.send, approval1: { ...prev.approval1 }, approval2: { ...prev.approval2 } }
+        })
+        fetch(`${SERVER_LINK}/api/explore/approval2?deptName=${deptName}`, { method: "PUT", credentials: "include" })
+            .then(async res => {
+                if (res.ok) return res.json()
+                const json = await res.json();
+                return await Promise.reject(json);
+            })
+            .then(res => {
+                alert(res);
+                reloadApproval2();
+            })
+            .catch(err => {
+                alert(JSON.stringify(err));
+            }).finally(() => {
+                setLoading(prev => {
+                    prev.approval2[deptName] = false;
+                    return { send: prev.send, approval1: { ...prev.approval1 }, approval2: { ...prev.approval2 } }
+                })
+            });
     }
 
 
@@ -74,6 +97,7 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
             })
             .then(res => {
                 alert(res);
+                window.location.reload();
             })
             .catch(err => {
                 alert(JSON.stringify(err));
@@ -92,7 +116,7 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
             }}>
                 <h1 style={{ padding: "1.5rem" }}>Select Department</h1>
                 <div >
-                    {deptNames.map((deptName, id) =>
+                    {deptNames && deptNames.map((deptName, id) =>
                         <div style={{ margin: "0.4rem 0", display: "flex", justifyContent: "flex-start" }} key={id}>
                             <DeptBtn deptName={deptName} status={deptStatus && deptStatus[deptName]} onClick={event => handleDeptBtnClick(event, deptName)} />
                             {/* Approval 1 */}
@@ -100,8 +124,8 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
                                 {(approval1[deptName]) ? "Approved" : "Approve"}
                             </Button> : ""}
                             {/* Approval 2 */}
-                            {((isUserExamController(user.designation)) && (user.phase === 4) && deptStatus && deptStatus[deptName]) ? <Button variant="outlined" sx={{ marginLeft: "1.2rem", width: "9rem", }} endIcon={loading.approval2[deptName] ? <HourglassTop /> : <Send />} onClick={event => handleApproval2Click(event, deptName)}>
-                                Approve
+                            {((isUserExamController(user.designation)) && (user.phase === 4) && approval1 && approval1[deptName] && approval2) ? <Button variant="outlined" sx={{ marginLeft: "1.2rem", width: "9rem", }} endIcon={loading.approval2[deptName] ? <HourglassTop /> : ((approval2[deptName]) ? <TaskAlt /> : <Send />)} disabled={!!(approval2[deptName])} onClick={event => handleApproval2Click(event, deptName)}>
+                                {(approval2[deptName]) ? "Approved" : "Approve"}
                             </Button> : ""}
                         </div>
                     )}
@@ -124,26 +148,78 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1 }) => {
 
 const DeptSelect = () => {
 
-    const { user } = useContext(userContext);
+    const { user, getLoggedIn } = useContext(userContext);
 
-    const { loading, error, value: deptNames } = useFetch(`${SERVER_LINK}/api/explore/deptNames`, { method: "GET" });
-    let { loading: loadingStatus, value: deptStatus }
-        = useFetch(`${SERVER_LINK}/api/explore/allDeptStatus`, { method: "GET" }, undefined, (user.phase === 1));
-    let { loading: loadingApproval1, value: approval1 }
-        = useFetch(`${SERVER_LINK}/api/explore/allApproval1`, { method: "GET" }, undefined, (user.phase === 1));
+    const { loading, error, value: deptNames, fetchAgain: reloadDeptNames } = useFetch(`${SERVER_LINK}/api/explore/deptNames`, { method: "GET" });
+    let { loading: loadingStatus, value: deptStatus, fetchAgain: reloadDeptStatus }
+        = useFetch(`${SERVER_LINK}/api/explore/allDeptStatus`, { method: "GET" }, undefined, (!user.phase || user.phase === 4 || user.phase === 1));
+
+
+    let { loading: loadingApproval1, value: approval1, fetchAgain: reloadApproval1 }
+        = useFetch(`${SERVER_LINK}/api/explore/allApproval1`, { method: "GET" }, undefined, (!user.phase || user.phase === 1));
+
+    // useFetch(`${SERVER_LINK}/api/explore/allApproval1`, { method: "GET" }, undefined,);
+
+
+    const [loadingApproval2, setLoadingApproval2] = useState(false);
+    const [approval2, setApproval2] = useState(undefined);
+    const [reloadA2, setReloadA2] = useState(true);
+
+    const reloadApproval2 = () => setReloadA2(prev => !prev);
+
+    useEffect(() => {
+
+        if (!user.phase && user.phase !== 4) return;
+
+        setLoadingApproval2(true);
+        setApproval2(undefined);
+
+        fetch(`${SERVER_LINK}/api/explore/allApproval2`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include',
+        })
+            .then(async res => {
+                if (res.ok) return res.json()
+                const json = await res.json();
+                return await Promise.reject(json);
+            })
+            .then(res => {
+                setApproval2(res);
+                setLoadingApproval2(false)
+            })
+            .catch(err => {
+                console.log(err);
+                setLoadingApproval2(false);
+            });
+
+    }, [user.phase, reloadA2]);
 
     if (user.phase === 1) {
-        deptStatus = undefined;
-        loadingStatus = false;
+        // deptStatus = undefined;
+        // loadingStatus = false;
 
-        loadingApproval1 = false;
-        approval1 = undefined;
+        // loadingApproval1 = false;
+        // approval1 = undefined;
     } else { }
 
     return (
         <div>
-            {(loading || loadingStatus || loadingApproval1) ? <LoadingSpinner /> :
-                (error ? <div>{JSON.stringify(error)}</div> : <DeptSelectComponent user={user} deptNames={deptNames} approval1={approval1} deptStatus={deptStatus} />)
+            {(loading || loadingStatus || loadingApproval1 || loadingApproval2) ? <LoadingSpinner /> :
+                (error ? <div>{JSON.stringify(error)}</div> :
+                    <DeptSelectComponent
+                        getLoggedIn={getLoggedIn}
+                        user={user}
+                        deptNames={deptNames}
+                        approval1={approval1}
+                        approval2={approval2}
+                        deptStatus={deptStatus}
+                        reloadDeptNames={reloadDeptNames}
+                        reloadDeptStatus={reloadDeptStatus}
+                        reloadApproval1={reloadApproval1}
+                        reloadApproval2={reloadApproval2}
+                    />
+                )
             }
         </div>
     )

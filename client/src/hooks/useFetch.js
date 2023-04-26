@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const DEFAULT_OPTIONS = {
     headers: { "Content-Type": "application/json" },
@@ -11,9 +11,14 @@ const DEFAULT_OPTIONS = {
 */
 const useFetch = (url, options = {}, dependencies = [], dontRun) => {
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(undefined);
     const [value, setValue] = useState(undefined);
+    const [rel, setRel] = useState(false);
+
+    const fetchAgain = useCallback(() => {
+        setRel(prev => !prev);
+    }, []);
 
     useEffect(() => {
 
@@ -52,9 +57,9 @@ const useFetch = (url, options = {}, dependencies = [], dontRun) => {
             controller.abort();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [...dependencies]);
+    }, [...dependencies, rel]);
 
-    return { loading, error, value };
+    return { loading, error, value, setValue, fetchAgain };
 }
 
 export default useFetch;

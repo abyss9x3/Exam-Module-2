@@ -183,6 +183,12 @@ const getAllApproval1 = async () => {
     return rows;
 }
 
+const getAllApproval2 = async () => {
+    const [rows] = await sqlDatabase.execute(`select deptName, approval2 from Approval`);
+    return rows;
+}
+
+
 const getOverallApproval1 = async () => {
     const [rows] = await sqlDatabase.execute("select approval1 from Approval");
     for (let i = 0; i < rows.length; ++i)
@@ -250,6 +256,6 @@ module.exports = {
     clearDatabase, getAllExaminers, initiateApprovalTable,
     getDepartmentTableWithoutCommits, getOverallDeptStatus,
     getOverallApproval1, getOverallApproval2, getAllDeptStatus,
-    getAllApproval1
+    getAllApproval1, getAllApproval2
 }
 

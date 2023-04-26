@@ -14,10 +14,10 @@ const getDeptNames = async (req, res) => {
 
 const postDeptNames = async (req, res) => {
     try {
-        if (!req.body || !req.body.deptNames) {
+        if (!req.query || !req.query.deptName) {
             return res.status(400).json("deptNames array is missing from the req body !");
         }
-        await database.postDeptNames(req.body.deptNames);
+        await database.postDeptNames(req.query.deptNames);
         return res.status(200).json("Done");
     } catch (error) {
         console.log(error);
@@ -137,10 +137,10 @@ const getAllDeptStatus = async (req, res) => {
 
 const postDeptStatus = async (req, res) => {
     try {
-        if (!req.body || !req.body.deptName) {
+        if (!req.query || !req.query.deptName) {
             return res.status(400).json("deptName is missing from the req body !");
         }
-        await database.postDeptStatus(req.body.deptName);
+        await database.postDeptStatus(req.query.deptName);
         return res.status(200).json("Done");
     } catch (error) {
         console.log(error);
@@ -173,13 +173,25 @@ const getAllApproval1 = async (req, res) => {
     }
 }
 
+const getAllApproval2 = async (req, res) => {
+    try {
+        const approval2 = await database.getAllApproval2();
+        const newobj = {};
+        approval2.forEach(ele => newobj[ele.deptName] = ele.approval2);
+        return res.status(200).json(newobj);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
+}
+
 
 const putApproval1 = async (req, res) => {
     try {
-        if (!req.body || !req.body.deptName) {
+        if (!req.query || !req.query.deptName) {
             return res.status(400).json("deptName is missing from the req body !");
         }
-        await database.putApproval1(req.body.deptName);
+        await database.putApproval1(req.query.deptName);
         return res.status(200).json("Done");
     } catch (error) {
         console.log(error);
@@ -202,10 +214,10 @@ const getApproval2 = async (req, res) => {
 
 const putApproval2 = async (req, res) => {
     try {
-        if (!req.body || !req.body.deptName) {
+        if (!req.query || !req.query.deptName) {
             return res.status(400).json("deptName is missing from the req body !");
         }
-        await database.putApproval2(req.body.deptName);
+        await database.putApproval2(req.query.deptName);
 
         return res.status(200).json("Done");
     } catch (error) {
@@ -255,7 +267,7 @@ const clearDatabase = async (req, res) => {
     }
 }
 
-let phase1Ended = false;
+let phase1Ended = true;
 
 const phase1End = async (req, res) => {
     try {
@@ -274,8 +286,8 @@ const getPhase = async deptName => {
     // if M or HOD checking for phase 2 and above
     if (deptName) {
         const deptStatus = await database.getDeptStatus(deptName);
-        if (deptStatus === 1 || deptStatus === '1') return 3;
-        else if (deptStatus === 0 || deptStatus === '0') return 2;
+        if (deptStatus.sentStatus === 1 || deptStatus.sentStatus === '1') return 3;
+        else if (deptStatus.sentStatus === 0 || deptStatus.sentStatus === '0') return 2;
     }
 
     // if EO, EC checking for phase 2
@@ -302,5 +314,5 @@ module.exports = {
     getApproval2, putApproval2, getExcellSheet, clearDatabase,
     getDepartmentTableWithoutCommits, phase1End,
     getPhase, sendAppointmentLetters, getAllDeptStatus,
-    getAllApproval1
+    getAllApproval1, getAllApproval2
 }

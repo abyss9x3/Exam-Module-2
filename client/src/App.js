@@ -39,7 +39,7 @@ const SplashRoute = ({ user }) => {
         if (user.phase === 1)
             return <NotAvailPage msg="ExamOfficer has not submitted Table yet !" />
         else if (user.phase === 2)
-            return <DeptTable />
+            return <Navigate to={`/department/table/${user.deptName}`} />
         else return <NotAvailPage msg="You have submitted examiners !" />
     }
     else if (isUserExamController(user.designation)) {
@@ -82,13 +82,13 @@ const App = () => {
                         <Route path="/login" exact element={<Login />} />
                         <Route path="/signup" exact element={<Signup />} />
                         <Route path="/deptSelect" exact element={<DeptSelect />} />
-                        
+
                         <Route path="/hodphase2" exact element={<HODTable />} />
                         <Route path="/eophase3" exact element={<EOphase3 />} />
                         <Route path="/ecphase4" exact element={<ECphase4 />} />
 
-                        <Route path="/examoffice/table/:id" exact element={<Table />} />
-                        <Route path="/department/table" exact element={<DeptTable />} />
+                        <Route path="/examoffice/table/:deptName" exact element={<Table />} />
+                        <Route path="/department/table/:deptName" exact element={<DeptTable />} />
                     </Routes>
                 </Suspense>
             </main>
