@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import * as ReactDOMClient from 'react-dom/client';
 
 import "./index.css";
@@ -10,11 +10,11 @@ const container = document.getElementById('root');
 const root = ReactDOMClient.createRoot(container);
 
 root.render(
-	<React.StrictMode>
-		<BrowserRouter>
-			<UserState>
-				<App />
-			</UserState>
-		</BrowserRouter>
-	</React.StrictMode>,
+	// <StrictMode>
+	<BrowserRouter>
+		<UserState>
+			<App />
+		</UserState>
+	</BrowserRouter>
+	// </StrictMode>
 );

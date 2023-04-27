@@ -38,12 +38,11 @@ router
     .put('/approval1', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER]), phaseValidator([2, 3]), putApproval1)
 
     .get('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([3, 4]), getApproval2)
-    .get('/allApproval2', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]),  getAllApproval2)
+    .get('/allApproval2', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getAllApproval2)
     .put('/approval2', loggingMiddleware, authValidator, authorizationHandler([EXAMCONTROLLER]), phaseValidator([3, 4]), putApproval2)
 
     .get('/sendAppointmentLetters', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), sendAppointmentLetters)
-    // .get('/excelSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), getExcellSheet)
-    .get('/excelSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), getExcellSheet)
+    .get('/excelSheet', loggingMiddleware, authValidator, authorizationHandler([EXAMOFFICER, EXAMCONTROLLER]), phaseValidator([5]), getExcellSheet)
     .delete('/', loggingMiddleware, authValidator, authorizationHandler([ADMIN]), phaseValidator([5]), clearDatabase);
 
 module.exports = router;

@@ -63,3 +63,32 @@ const useFetch = (url, options = {}, dependencies = [], dontRun) => {
 }
 
 export default useFetch;
+
+export const justFetch = (url, options, onstart, onsuccess, onreject, onend) => {
+
+    onstart && onstart();
+    options = options ? options : {};
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetch(url, { signal, ...DEFAULT_OPTIONS, ...options })
+        .then(async res => {
+            if (res.ok) return res.json()
+            const json = await res.json();
+            return await Promise.reject(json);
+        })
+        .then(onsuccess ? onsuccess : () => { })
+        .catch(err => {
+            if (err.name === "AbortError") {
+                console.log("Fetch Cancelled !", url);
+            } else {
+                onreject && onreject(err);
+            }
+        })
+        .finally(onend ? onend : () => { });
+
+    const abort = () => controller.abort();
+
+    return abort;
+}
