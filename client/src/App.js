@@ -7,8 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserDetails from "./components/UserDetails/UserDetails";
 import NavigationStack from "./components/NavigationStack/NavigationStack";
 
-
-
 const App = () => {
 
     const { getLoggedIn } = useContext(userContext);

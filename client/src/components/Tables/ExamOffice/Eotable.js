@@ -12,7 +12,7 @@ const columns = [
   },
   {
     field: "subNomenclature",
-    headerName: "Subject Nomenclature",
+    headerName: "Subject Number",
     width: 150,
     editable: true,
   },
@@ -22,134 +22,53 @@ const columns = [
     width: 110,
     // editable: true,
     renderCell: (params) => (
-        <input
-          type="file"
-          onChange={(event) => {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-              const dataUrl = reader.result;
-              params.setValue(dataUrl);
-            };
-          }}
-        />
-      ),
+      <input
+        type="file"
+        onChange={(event) => {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            const dataUrl = reader.result;
+            params.setValue(dataUrl);
+          };
+        }}
+      />
+    ),
   },
-  {
-    field: "syllabus",
-    headerName: "Syllabus",
-    width: 110,
-    // editable: true,
-    renderCell: (params) => (
-        <input
-          type="file"
-          onChange={(event) => {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-              const dataUrl = reader.result;
-              params.setValue(dataUrl);
-            };
-          }}
-        />
-      ),
-  },
-  {
-    field: "examiner1_name",
-    headerName: "Examiner2 Name",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "examiner1_contactNo",
-    headerName: "Examiner1 ContactNo",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "examiner1_email",
-    headerName: "Examiner1 Email",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "examiner2_name",
-    headerName: "Examiner2 Name",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "examiner2_contactNo",
-    headerName: "Examiner2 ContactNo",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "examiner2_email",
-    headerName: "Examiner2 Email",
-    width: 110,
-    editable: true,
-  },
-//   {
-//     field: "commit",
-//     headerName: "Commit",
-//     width: 110,
-//     renderCell: (params) => (
-//       <button onClick={() => console.log(`Commit row ${params.row.id}`)}>
-//         Commit
-//       </button>
-//     ),
-//   },
 ];
 
 const initialRows = [
-  { id: 1, subNomenclature: "Snow", subCode: "Jon"},
-  { id: 2, subNomenclature: "Lannister", subCode: "Cersei"},
-  { id: 3, subNomenclature: "Lannister", subCode: "Jaime"},
-  { id: 4, subNomenclature: "Stark", subCode: "Arya"},
-  {
-    id: 5,
-    subNomenclature: "Targaryen",
-    subCode: "Daenerys"
-  },
-  { id: 6, subNomenclature: "Melisandre", subCode: "Lady"},
-  { id: 7, subNomenclature: "Clifford", subCode: "Ferrara"},
-  { id: 8, subNomenclature: "Frances", subCode: "Rossini"},
-  { id: 9, subNomenclature: "Roxie", subCode: "Harvey"},
+  { id: 1, subNomenclature: "Snow", subCode: "Jon", },
+  { id: 2, subNomenclature: "Lannister", subCode: "Cersei" },
+  { id: 3, subNomenclature: "Lannister", subCode: "Jaime" },
+  { id: 4, subNomenclature: "Stark", subCode: "Arya" },
+  { id: 5, subNomenclature: "Targaryen", subCode: "Daenerys" },
+  { id: 6, subNomenclature: "Melisandre", subCode: null },
+  { id: 7, subNomenclature: "Clifford", subCode: "Ferrara" },
+  { id: 8, subNomenclature: "Frances", subCode: "Rossini" },
+  { id: 9, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 10, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 11, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 12, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 13, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 14, subNomenclature: "Roxie", subCode: "Harvey", },
+  { id: 15, subNomenclature: "Roxie", subCode: "Harvey", },
 ];
 
-export default function EOphase3() {
+export default function DataGridDemo() {
   const [rows, setRows] = React.useState(initialRows);
-//   const handleAddRow = () => {
-//     const newId = rows.length + 1;
-//     setRows([
-//       ...rows,
-//       { id: newId, subNomenclature: "", subCode: "", null },
-//     ]);
-//   };
-  // const handleAddRow = () => {
-  //   const newId = rows.length + 1;
-  //   setRows([
-  //     ...rows,
-  //     { id: newId, subNomenclature: "", subCode: "", null },
-  //   ]);
-  // };
 
-  const data = React.useMemo(
-    () =>
-      rows.map(({ id, subCode, subNomenclature, template }) => ({
-        id,
-        subCode,
-        subNomenclature,
-        template,
-      })),
-    [rows]
-  );
+  const handleAddRow = () => {
+    const newId = rows.length + 1;
+    setRows([
+      ...rows,
+      { id: newId, subNomenclature: "", subCode: "" },
+    ]);
+  };
 
   return (
-    <>
+    <Box>
       <DataGrid
         sx={{ alignItems: "center" }}
         rows={rows}
@@ -157,11 +76,10 @@ export default function EOphase3() {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        disableColumnMenu 
-        disableColumnSort 
+        disableColumnMenu
+        disableColumnSort
         sortColumnDirection="asc"
         hideFooterPagination
-        disableAddRow={true}
         onEditCellChangeCommitted={(params, event) => {
           const { id, field, value } = params;
           setRows(
@@ -181,9 +99,10 @@ export default function EOphase3() {
           right: '0'
         }}
       >
+        <button onClick={handleAddRow}>Add Row</button>
         <button onClick={() => console.log("Commit")}>Commit</button>
       </Box>
-    </>
+    </Box>
   );
 }
 

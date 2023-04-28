@@ -1,12 +1,12 @@
 import * as React from "react";
+import { useParams } from 'react-router-dom'
 import { DataGrid } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
-import { SERVER_LINK } from "../../dev-server-link";
-import useFetch from './../../hooks/useFetch';
-import LoadingSpinner from './../LoadingSpinner/LoadingSpinner';
-import { useNavigate, useParams } from 'react-router-dom'
-import userContext from './../../store/user/userContext';
-import { isUserHOD } from './../../store/user/userUtils';
+
+import { SERVER_LINK } from "../../../dev-server-link";
+import useFetch from '../../../hooks/useFetch';
+import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
+import userContext from '../../../store/user/userContext';
+import { isUserHOD } from '../../../store/user/userUtils';
 
 const columns = [
     { field: "id", headerName: "ID", width: 90 },

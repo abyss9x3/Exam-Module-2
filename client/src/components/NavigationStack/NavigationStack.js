@@ -1,13 +1,16 @@
 import React, { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import HODTable from "../HOD/hodphase2";
-import EOphase3 from "../ExamOffice/Eophase3";
-import ECphase4 from "../ExamController/ecphase4";
-import DeptTable from '../Department/DptTable';
-import Table from "../ExamOffice/Eotable";
+import HODTable from "../Tables/HOD/hodphase2";
+import EOphase3 from "../Tables/ExamOffice/Eophase3";
+import ECphase4 from "../Tables/ExamController/ecphase4";
+import DeptTable from '../Tables/Department/DptTable';
+import Table from "../Tables/ExamOffice/Eotable";
+
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 import NotAvailPage from "../NotAvailPage/NotAvailPage";
+import TableContainer from '../TableContainer/TableContainer';
+import TableHandler from '../TableHandler/TableHandler';
 
 const Login = React.lazy(() => import('../../pages/Login/Login'));
 const Signup = React.lazy(() => import('../../pages/Signup/Signup'));
@@ -30,9 +33,11 @@ const NavigationStack = () => {
                 <Route path="/hodphase2" exact element={<HODTable />} />
                 <Route path="/eophase3" exact element={<EOphase3 />} />
                 <Route path="/ecphase4" exact element={<ECphase4 />} />
-
+                ``
                 <Route path="/examoffice/table/:deptName" exact element={<Table />} />
                 <Route path="/department/table/:deptName" exact element={<DeptTable />} />
+
+                <Route path="/tableHandler/:id" exact element={<TableHandler />} />
 
                 <Route path="*" element={<NotAvailPage msg="Page Not Found !" />} />
             </Routes>
