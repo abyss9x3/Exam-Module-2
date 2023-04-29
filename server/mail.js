@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 
+/** @type {nodemailer.Transporter} */
 let transporter = null;
 
 const connectNodeMailer = () => {
@@ -20,8 +21,8 @@ const mailTemplateHTML = `<b>Hey there! </b>
 <br>This is our first message sent with Nodemailer<br/>`;
 
 const sendApprovalLetters = async (allExaminers) => {
-    allExaminers.forEach(examiner => {
 
+    const promiseArray = allExaminers.map(examiner => {
         const mailData = {
             from: 'youremail@gmail.com',  // sender address
             to: examiner.email,   // list of receivers
@@ -38,14 +39,15 @@ const sendApprovalLetters = async (allExaminers) => {
             ]
         };
 
-        transporter.sendMail(mailData, function (err, info) {
-            if (err)
-                console.log(err)
-            else
-                console.log(info);
-        });
-
+        return new Promise((resolve, reject) => {
+            transporter.sendMail(mailData, function (err, info) {
+                if (err) reject(err)
+                else resolve(info);
+            });
+        })
     });
+
+    return await Promise.all(promiseArray);
 }
 
 module.exports = {

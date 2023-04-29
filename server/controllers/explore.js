@@ -18,7 +18,7 @@ const postDeptNames = async (req, res) => {
             return res.status(400).json("deptNames array is missing from the req body !");
         }
         await database.postDeptNames(req.query.deptNames);
-        return res.status(200).json("Done");
+        return res.status(200).json("The names of the departments have been updated.");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -44,7 +44,7 @@ const postDeptTableWithoutExaminers = async (req, res) => {
             return res.status(400).json("deptName or tableData is missing from the req body !");
         }
         await database.postDeptTableWithoutExaminers({ tableData: req.body.tableData, deptName: req.body.deptName });
-        return res.status(200).json("Done");
+        return res.status(200).json("Updates have been made to the department tables.");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -71,7 +71,7 @@ const postDepartmentTable = async (req, res) => {
             return res.status(400).json("deptName or tableData is missing from the req body !");
         }
         await database.postDepartmentTable({ tableData: req.body.tableData, deptName: req.body.deptName });
-        return res.status(200).json("Done");
+        return res.status(200).json("Updates have been made to the department tables.");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -98,11 +98,10 @@ const commitRow = async (req, res) => {
         }
         await database.commitRow({
             rowData: req.body.rowData,
-            deptName: req.body.deptName,
             memberLoginId: req.loginid,
             memberName: req.name
         });
-        return res.status(200).json("Done");
+        return res.status(200).json("The row data has been committed");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -141,7 +140,7 @@ const postDeptStatus = async (req, res) => {
             return res.status(400).json("deptName is missing from the req body !");
         }
         await database.postDeptStatus(req.query.deptName);
-        return res.status(200).json("Done");
+        return res.status(200).json("The department status has been updated.");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -192,7 +191,7 @@ const putApproval1 = async (req, res) => {
             return res.status(400).json("deptName is missing from the req body !");
         }
         await database.putApproval1(req.query.deptName);
-        return res.status(200).json("Done");
+        return res.status(200).json("Approved");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -219,7 +218,7 @@ const putApproval2 = async (req, res) => {
         }
         await database.putApproval2(req.query.deptName);
 
-        return res.status(200).json("Done");
+        return res.status(200).json("Approved");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -229,9 +228,9 @@ const putApproval2 = async (req, res) => {
 const sendAppointmentLetters = async (req, res) => {
     try {
         const allExaminers = await database.getAllExaminers();
-        await sendApprovalLetters(allExaminers);
+        const results = await sendApprovalLetters(allExaminers);
 
-        return res.status(200).json("Done");
+        return res.status(200).json({ msg: "Sent appointment letters ! ", results });
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -260,7 +259,7 @@ const getExcellSheet = async (req, res) => {
 const clearDatabase = async (req, res) => {
     try {
         await database.clearDatabase();
-        return res.status(200).json("Done");
+        return res.status(200).json("Database cleared !");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);
@@ -272,7 +271,7 @@ let phase1Ended = false;
 const phase1End = async (req, res) => {
     try {
         phase1Ended = true;
-        res.status(200).json("Send Successfully ! Phase 1 completed !");
+        res.status(200).json("Send Successfully ! Departments can now enter Examiner details for all subjects in the database, which contains all subject details for all departments.");
     } catch (error) {
         console.log(error);
         return res.status(400).json(error);

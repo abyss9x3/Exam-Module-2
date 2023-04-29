@@ -141,6 +141,8 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1, approval2
                 approval={approval2}
             />
         );
+
+    else return <div>You are not Authorized to view this page !</div>
 }
 
 const reducer = (state, action) => {

@@ -123,6 +123,7 @@ const postExaminers = async tableData => {
 
 const postDepartmentTable = async ({ tableData, deptName }) => {
     // auto deletes all associated examiners with help of trigger
+    // TODO: delete details of commit table also and if required re-enter
     await sqlDatabase.execute(`delete from ExamModule where deptName="${deptName}"`);
 
     await postExaminers(tableData);
@@ -134,7 +135,7 @@ const postDepartmentTable = async ({ tableData, deptName }) => {
     await sqlDatabase.execute(`insert into ExamModule (id, subNomenclature, subCode, template, examiner1, examiner2, syllabus, deptName ) values ${str}`);
 }
 
-const commitRow = async ({ deptName, rowData, memberLoginId }) => {
+const commitRow = async ({ rowData, memberLoginId }) => {
     // rowData = { id, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
     await sqlDatabase.execute(`INSERT into Examiner1 (email, name, contactNo) values ('${rowData.examiner1_email}', '${rowData.examiner1_name}', ${rowData.examiner1_contactNo})`);
     await sqlDatabase.execute(`INSERT into Examiner2 (email, name, contactNo) values ('${rowData.examiner2_email}', '${rowData.examiner2_name}', ${rowData.examiner2_contactNo})`);

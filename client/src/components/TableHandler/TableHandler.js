@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
+import { useParams } from 'react-router-dom';
 import TableContainer from '../TableContainer/TableContainer';
 import userContext from './../../store/user/userContext';
-import { isUserExamController, isUserExamOfficer, isUserMember, isUserAdmin, isUserHOD } from './../../store/user/userUtils';
-import useFetch, { justFetch } from './../../hooks/useFetch';
-import { useParams } from 'react-router-dom';
+import { isUserExamController, isUserExamOfficer, isUserMember, isUserHOD } from './../../store/user/userUtils';
+import useFetch from './../../hooks/useFetch';
 import NotAvailPage from './../NotAvailPage/NotAvailPage';
 import { SERVER_LINK } from './../../dev-server-link';
 
@@ -31,11 +31,11 @@ const TableHandler = () => {
         return <Table3 deptName={deptName} />
     }
     // 4. EO in phase 3
-    else if (isUserExamOfficer(user.designation) && user.phase === 3) {
+    else if (isUserExamOfficer(user.designation) && (user.phase === 2 || user.phase === 3)) {
         return <Table4 deptName={deptName} />
     }
     // 5. EC in phase 4
-    else if (isUserExamController(user.designation) && user.phase === 4) {
+    else if (isUserExamController(user.designation) && (user.phase === 3 && user.phase === 4)) {
         return <Table5 deptName={deptName} />
     }
     else {
@@ -53,7 +53,7 @@ const Table1 = ({ deptName }) => {
         <TableContainer
             show={[
                 "T",
-                "addBtn", "commitBtn"
+                "deleteBtn", "addBtn", "commitBtn"
             ]}
             editable={[
                 'SC', 'SN', 'T'
@@ -124,7 +124,7 @@ const Table4 = ({ deptName }) => {
 
     const {
         value: rows, setValue: setRows, error, setError, loading
-    } = useFetch(`${SERVER_LINK}/api/explore/deptTableWithoutExaminers?deptName=${deptName}`, { method: "GET" });
+    } = useFetch(`${SERVER_LINK}/api/explore/departmentTableWithoutCommits?deptName=${deptName}`, { method: "GET" });
 
     return (
         <TableContainer
@@ -141,7 +141,7 @@ const Table4 = ({ deptName }) => {
             loading={loading}
             error={error}
             setError={setError}
-            commitUrl={`${SERVER_LINK}/api/explore/deptTableWithoutExaminers?deptName=${deptName}`}
+            commitUrl={`${SERVER_LINK}/api/explore/departmentTable?deptName=${deptName}`}
         />
     );
 }
@@ -150,7 +150,7 @@ const Table5 = ({ deptName }) => {
 
     const {
         value: rows, setValue: setRows, error, setError, loading
-    } = useFetch(`${SERVER_LINK}/api/explore/deptTableWithoutExaminers?deptName=${deptName}`, { method: "GET" });
+    } = useFetch(`${SERVER_LINK}/api/explore/departmentTableWithoutCommits?deptName=${deptName}`, { method: "GET" });
 
     return (
         <TableContainer
@@ -167,7 +167,7 @@ const Table5 = ({ deptName }) => {
             loading={loading}
             error={error}
             setError={setError}
-            commitUrl={`${SERVER_LINK}/api/explore/deptTableWithoutExaminers?deptName=${deptName}`}
+            commitUrl={`${SERVER_LINK}/api/explore/departmentTable?deptName=${deptName}`}
         />
     );
 }

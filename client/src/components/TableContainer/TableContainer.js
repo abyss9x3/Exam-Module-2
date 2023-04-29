@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button, Box, Input } from "@mui/material";
-import { AddCircle, Cancel, DoneAll, FileUpload, Send, UploadFile } from '@mui/icons-material';
-import LoadingSpinner from './../LoadingSpinner/LoadingSpinner';
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { Button, Box } from "@mui/material";
+import { AddCircle, Cancel, Delete, DoneAll, FileUpload, Send, UploadFile } from '@mui/icons-material';
+import LoadingSpinner from './../LoadingSpinner/LoadingSpinner';
 import { justFetch } from "../../hooks/useFetch";
 import { SERVER_LINK } from "../../dev-server-link";
 
@@ -17,7 +17,6 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
 
     const handleCommit = () => {
         if (loadingStates.commitBtn) return;
-        console.log(rows);
 
         justFetch(
             commitUrl,
@@ -49,14 +48,13 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
 
     const handleRowCommit = params => {
         if (loadingStates.rowCommit) return;
-        console.log(params);
 
         justFetch(
             `${SERVER_LINK}/api/explore/commitRow`,
             {
                 method: "POST", body: JSON.stringify({
                     deptName: deptName,
-                    rowData: []
+                    rowData: params.row
                 })
             },
             () => setLoadingStates(prev => ({ ...prev, rowCommit: true })),
@@ -93,12 +91,42 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         </Button >
     }, [setRows]);
 
+    const handleAddRow = () => {
+        // TODO: newId should be max of id + 1
+        const newId = deptName.toLowerCase() + (rows.length + 1);
+        setRows(prev => ([...prev, { id: newId }]));
+    }
+
+    const handleDeleteRow = id => {
+        setRows(prev => prev.filter(row => row.id !== id));
+    }
+
+    const handleCancel = () => {
+        navigator('/');
+    }
+
     const columns = useMemo(() => {
-        const colArr = [
+        let colArr = [];
+
+        show && show.includes("deleteBtn") && colArr.push({
+            field: 'actions',
+            type: 'actions',
+            width: 50,
+            getActions: params => [
+                <GridActionsCellItem
+                    icon={<Delete color="error" />}
+                    label="Delete"
+                    onClick={() => handleDeleteRow(params.id)}
+                />
+            ]
+        });
+
+        colArr = [
+            ...colArr,
             {
                 field: "id",
                 headerName: "ID",
-                width: 100,
+                width: 80,
                 editable: false
             },
             {
@@ -110,9 +138,9 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
             {
                 field: "subNomenclature",
                 headerName: "Subject Nomenclature",
-                width: 170,
-                editable: editable.includes("SN"),
-            },
+                width: 195,
+                editable: editable.includes("SN")
+            }
         ];
 
         if (!show || !show.length) return colArr;
@@ -143,7 +171,7 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         show.includes("E1") && colArr.push({
             field: "examiner1_contactNo",
             headerName: "Examiner1 ContactNo",
-            width: 160,
+            width: 180,
             editable: editable.includes("E1"),
         })
 
@@ -157,33 +185,33 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         show.includes("E2") && colArr.push({
             field: "examiner2_name",
             headerName: "Examiner2 Name",
-            width: 145,
+            width: 155,
             editable: editable.includes("E2"),
         })
 
         show.includes("E2") && colArr.push({
             field: "examiner2_contactNo",
             headerName: "Examiner2 ContactNo",
-            width: 160,
+            width: 185,
             editable: editable.includes("E2"),
         })
 
         show.includes("E2") && colArr.push({
             field: "examiner2_email",
             headerName: "Examiner2 Email",
-            width: 145,
+            width: 150,
             editable: editable.includes("E2"),
         })
 
         show.includes("rowCommit") && colArr.push({
             field: "commit",
             headerName: "Commit",
-            width: 200,
+            width: 220,
             renderCell: params => (
-                <Button
+                params.row.member ? <Box color="rgb(46 125 50)">Commited by {params.row.member}</Box> : <Button
                     sx={{ textTransform: "capitalize" }}
                     variant="outlined"
-                    color="warning"
+                    color="secondary"
                     onClick={() => handleRowCommit(params)}
                 >
                     Commit
@@ -196,15 +224,6 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [UploadFileComponent, editable, show]);
 
-    const handleAddRow = () => {
-        const newId = deptName.toLowerCase() + (rows.length + 1);
-        setRows([...rows, { id: newId }]);
-    }
-
-    const handleCancel = () => {
-        navigator('/');
-    }
-
     if (loading) {
         return <LoadingSpinner />
     } else if (error) {
@@ -213,11 +232,22 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
     else return (
         <section>
             {rows && <DataGrid
-                sx={{ maxHeight: "75vh", margin: "12px 18px" }}
+                sx={{
+                    maxHeight: "75vh",
+                    margin: "12px 18px",
+                    "& .MuiDataGrid-iconButtonContainer": {
+                        display: "none"
+                    },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                        fontSize: "1rem",
+                        fontFamily: "Overpass"
+                    },
+                    "& .MuiDataGrid-cell": {
+                        borderRight: "1px solid rgba(224, 224, 224, 1)"
+                    }
+                }}
                 rows={rows}
                 columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
                 disableSelectionOnClick
                 disableColumnMenu
                 disableColumnSort
