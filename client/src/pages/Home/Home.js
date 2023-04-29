@@ -27,7 +27,7 @@ const Home = () => {
         if (user.phase === 1)
             return <NotAvailPage msg="ExamOfficer has not submitted Table yet !" />
         else if (user.phase === 2)
-            return <Navigate to={`/department/table/${user.deptName}`} />
+            return <Navigate to={`/table/${user.deptName}`} />
         else return <NotAvailPage msg="You have submitted examiners !" />
     }
     else if (isUserExamController(user.designation)) {

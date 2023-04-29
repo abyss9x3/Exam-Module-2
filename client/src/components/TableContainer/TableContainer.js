@@ -1,13 +1,72 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Input } from "@mui/material";
 import { AddCircle, Cancel, DoneAll, FileUpload, Send, UploadFile } from '@mui/icons-material';
+import LoadingSpinner from './../LoadingSpinner/LoadingSpinner';
+import { useNavigate } from "react-router-dom";
+import { justFetch } from "../../hooks/useFetch";
+import { SERVER_LINK } from "../../dev-server-link";
 
+const TableContainer = ({ deptName, rows, setRows, loading, error, setError, show, editable, commitUrl }) => {
 
-const TableContainer = ({ rows, setRows, show, handleCommit, handleSend }) => {
+    const navigator = useNavigate();
+
+    const [loadingStates, setLoadingStates] = useState({
+        commitBtn: false, rowCommit: false, sendBtn: false
+    });
+
+    const handleCommit = () => {
+        if (loadingStates.commitBtn) return;
+        console.log(rows);
+
+        justFetch(
+            commitUrl,
+            {
+                method: "POST", body: JSON.stringify({
+                    deptName: deptName,
+                    tableData: rows
+                })
+            },
+            () => setLoadingStates(prev => ({ ...prev, commitBtn: true })),
+            alert,
+            setError,
+            () => setLoadingStates(prev => ({ ...prev, commitBtn: false }))
+        );
+    }
+
+    const handleSend = () => {
+        if (loadingStates.sendBtn) return;
+
+        justFetch(
+            `${SERVER_LINK}/api/explore/deptStatus?deptName=${deptName}`,
+            { method: "PUT" },
+            () => setLoadingStates(prev => ({ ...prev, sendBtn: true })),
+            alert,
+            setError,
+            () => setLoadingStates(prev => ({ ...prev, sendBtn: false }))
+        );
+    }
+
+    const handleRowCommit = params => {
+        if (loadingStates.rowCommit) return;
+        console.log(params);
+
+        justFetch(
+            `${SERVER_LINK}/api/explore/commitRow`,
+            {
+                method: "POST", body: JSON.stringify({
+                    deptName: deptName,
+                    rowData: []
+                })
+            },
+            () => setLoadingStates(prev => ({ ...prev, rowCommit: true })),
+            alert,
+            setError,
+            () => setLoadingStates(prev => ({ ...prev, rowCommit: false }))
+        );
+    }
 
     const UploadFileComponent = useCallback((params, colName) => {
-        console.log(params);
         return <Button
             sx={{ textTransform: "capitalize" }}
             variant="outlined"
@@ -39,93 +98,93 @@ const TableContainer = ({ rows, setRows, show, handleCommit, handleSend }) => {
             {
                 field: "id",
                 headerName: "ID",
-                width: 90,
+                width: 100,
                 editable: false
             },
             {
                 field: "subCode",
                 headerName: "Subject Code",
                 width: 150,
-                editable: true,
+                editable: editable.includes("SC")
             },
             {
                 field: "subNomenclature",
                 headerName: "Subject Nomenclature",
                 width: 170,
-                editable: true,
+                editable: editable.includes("SN"),
             },
         ];
 
         if (!show || !show.length) return colArr;
 
-        show.includes("template") && colArr.push({
+        show.includes("T") && colArr.push({
             field: "template",
             headerName: "Template",
             width: 150,
-            editable: false,
+            editable: editable.includes("T"),
             renderCell: params => UploadFileComponent(params, 'template')
         })
 
-        show.includes("syllabus") && colArr.push({
+        show.includes("SYLL") && colArr.push({
             field: "syllabus",
             headerName: "Syllabus",
             width: 150,
-            editable: false,
+            editable: editable.includes("SYLL"),
             renderCell: params => UploadFileComponent(params, 'syllabus')
         })
 
-        show.includes("examiner1") && colArr.push({
+        show.includes("E1") && colArr.push({
             field: "examiner1_name",
             headerName: "Examiner1 Name",
             width: 145,
-            editable: true,
+            editable: editable.includes("E1"),
         })
 
-        show.includes("examiner1") && colArr.push({
+        show.includes("E1") && colArr.push({
             field: "examiner1_contactNo",
             headerName: "Examiner1 ContactNo",
             width: 160,
-            editable: true,
+            editable: editable.includes("E1"),
         })
 
-        show.includes("examiner1") && colArr.push({
+        show.includes("E1") && colArr.push({
             field: "examiner1_email",
             headerName: "Examiner1 Email",
             width: 145,
-            editable: true,
+            editable: editable.includes("E1"),
         })
 
-        show.includes("examiner2") && colArr.push({
+        show.includes("E2") && colArr.push({
             field: "examiner2_name",
             headerName: "Examiner2 Name",
             width: 145,
-            editable: true,
+            editable: editable.includes("E2"),
         })
 
-        show.includes("examiner2") && colArr.push({
+        show.includes("E2") && colArr.push({
             field: "examiner2_contactNo",
             headerName: "Examiner2 ContactNo",
             width: 160,
-            editable: true,
+            editable: editable.includes("E2"),
         })
 
-        show.includes("examiner2") && colArr.push({
+        show.includes("E2") && colArr.push({
             field: "examiner2_email",
             headerName: "Examiner2 Email",
             width: 145,
-            editable: true,
+            editable: editable.includes("E2"),
         })
 
-        show.includes("commit") && colArr.push({
+        show.includes("rowCommit") && colArr.push({
             field: "commit",
             headerName: "Commit",
             width: 200,
-            renderCell: (params) => (
+            renderCell: params => (
                 <Button
                     sx={{ textTransform: "capitalize" }}
                     variant="outlined"
                     color="warning"
-                    onClick={() => console.log(`Commit row ${params.row.id}`)}
+                    onClick={() => handleRowCommit(params)}
                 >
                     Commit
                 </Button>
@@ -133,14 +192,25 @@ const TableContainer = ({ rows, setRows, show, handleCommit, handleSend }) => {
         })
 
         return colArr;
-    }, [UploadFileComponent, show]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [UploadFileComponent, editable, show]);
 
     const handleAddRow = () => {
-        const newId = rows.length + 1;
+        const newId = deptName.toLowerCase() + (rows.length + 1);
         setRows([...rows, { id: newId }]);
     }
 
-    return (
+    const handleCancel = () => {
+        navigator('/');
+    }
+
+    if (loading) {
+        return <LoadingSpinner />
+    } else if (error) {
+        return <div>{JSON.stringify(error)}</div>
+    }
+    else return (
         <section>
             {rows && <DataGrid
                 sx={{ maxHeight: "75vh", margin: "12px 18px" }}
@@ -155,13 +225,11 @@ const TableContainer = ({ rows, setRows, show, handleCommit, handleSend }) => {
                 hideFooterPagination
                 hideFooter
                 disableAddRow
-                onEditCellChangeCommitted={(params, event) => {
-                    const { id, field, value } = params;
-                    setRows(
-                        rows.map((row) =>
-                            row.id === id ? { ...row, [field]: value } : row
-                        )
-                    );
+                processRowUpdate={newRow => {
+                    setRows(prev => prev.map((row) => (
+                        row.id === newRow.id ? { ...newRow } : row
+                    )));
+                    return newRow;
                 }}
             />}
             <Box
@@ -196,12 +264,12 @@ const TableContainer = ({ rows, setRows, show, handleCommit, handleSend }) => {
                     variant="contained"
                     color="warning"
                     sx={btnStyles}
-                    onClick={() => window.location.reload()}
+                    onClick={handleCancel}
                     endIcon={<Cancel />}
                 >
                     Cancel
                 </Button>
-                {show && show.includes("commitBtn") && <Button
+                {show && show.includes("sendBtn") && <Button
                     variant="contained"
                     color="secondary"
                     sx={btnStyles}

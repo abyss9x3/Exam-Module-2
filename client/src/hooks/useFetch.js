@@ -59,7 +59,7 @@ const useFetch = (url, options = {}, dependencies = [], dontRun) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...dependencies, rel]);
 
-    return { loading, error, value, setValue, fetchAgain };
+    return { loading, error, value, setValue, setError, fetchAgain };
 }
 
 export default useFetch;

@@ -64,18 +64,18 @@ const postDeptNames = async deptNames => {
 }
 
 const getDeptTableWithoutExaminers = async deptName => {
-    const [rows] = await sqlDatabase.execute(`select Id, SubNomenclature, SubCode, Template from ExamModule where deptName="${deptName}"`)
+    const [rows] = await sqlDatabase.execute(`select id, subNomenclature, subCode, template from ExamModule where deptName="${deptName}"`)
     return rows;
 }
 
 const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => {
     // tableData = [ { id, subNomenclature, subCode, template } ]
-    let str = `("${tableData[0].id}", "${tableData[0].SubNomenclature}", "${tableData[0].SubCode}", "${tableData[0].Template}", "${deptName}")`;
+    let str = `("${tableData[0].id}", "${tableData[0].subNomenclature}", "${tableData[0].subCode}", ${tableData[0].template ? `"${tableData[0].template}"` : null}, "${deptName}")`;
     for (let i = 1; i < tableData.length; ++i) {
-        str = `${str}, ("${tableData[i].id}", "${tableData[i].SubNomenclature}", "${tableData[i].SubCode}", "${tableData[i].Template}", "${deptName}")`
+        str = `${str}, ("${tableData[i].id}", "${tableData[i].subNomenclature}", "${tableData[i].subCode}", ${tableData[i].template ? `"${tableData[i].template}"` : null}, "${deptName}")`
     }
-    await sqlDatabase.execute(`delete from ExamModule where DeptName="${deptName}"`)
-    await sqlDatabase.execute(`insert into ExamModule (id, SubNomenclature, SubCode, Template, DeptName) values ${str}`)
+    await sqlDatabase.execute(`delete from ExamModule where DeptName="${deptName}"`);
+    await sqlDatabase.execute(`insert into ExamModule (id, subNomenclature, subCode, template, DeptName) values ${str}`);
 }
 
 const getDepartmentTable = async deptName => {
@@ -92,7 +92,6 @@ const getDepartmentTable = async deptName => {
     where deptName = '${deptName}' `);
     return rows;
 }
-
 
 const getDepartmentTableWithoutCommits = async deptName => {
     const [rows] = await sqlDatabase.execute(`
@@ -139,7 +138,7 @@ const commitRow = async ({ deptName, rowData, memberLoginId }) => {
     // rowData = { id, examiner1_email, examiner1_name, examiner1_contactNo, examiner2_email, examiner2_name, examiner2_contactNo, syllabus }
     await sqlDatabase.execute(`INSERT into Examiner1 (email, name, contactNo) values ('${rowData.examiner1_email}', '${rowData.examiner1_name}', ${rowData.examiner1_contactNo})`);
     await sqlDatabase.execute(`INSERT into Examiner2 (email, name, contactNo) values ('${rowData.examiner2_email}', '${rowData.examiner2_name}', ${rowData.examiner2_contactNo})`);
-    await sqlDatabase.execute(`UPDATE ExamModule SET examiner1="${rowData.examiner1_email}", examiner2="${rowData.examiner2_email}", syllabus=${rowData.syllabus} WHERE id="${rowData.id}"`);
+    await sqlDatabase.execute(`UPDATE ExamModule SET examiner1="${rowData.examiner1_email}", examiner2="${rowData.examiner2_email}", syllabus=${rowData.syllabus ? `"${rowData.syllabus}"` : null} WHERE id="${rowData.id}"`);
     await sqlDatabase.execute(`INSERT INTO Commits (member, examModuleID) values ('${memberLoginId}', '${rowData.id}')`);
 }
 
@@ -221,7 +220,7 @@ const putApproval2 = async deptName => {
 }
 
 const getExcellSheet = async () => {
-    const [rows] = await sqlDatabase.execute(`select id, subNomenclature, subCode, examCode,template, 
+    const [rows] = await sqlDatabase.execute(`select id, subNomenclature, subCode, examCode, template, 
     examiner1 as examiner1_email, examiner1.Name as examiner1_name, examiner1.ContactNo as examiner1_contactNo, 
     examiner2 as examiner2_email, examiner2.Name as examiner2_name, examiner2.ContactNo as examiner2_contactNo, 
     syllabus, deptName 

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import userContext from '../../store/user/userContext';
+import { CircularProgress } from '@mui/material'
 
 const UserDetails = () => {
 
@@ -8,7 +9,18 @@ const UserDetails = () => {
     return (
         <section style={styles.section}>
             <div style={styles.container}>
-                {user.isLoading ? "Wait loading user details" : (
+                {user.isLoading ? (
+                    <div>
+                        <span>Wait loading user details</span>
+                        <CircularProgress sx={{
+                            position: "relative !important",
+                            top: "6px !important",
+                            marginLeft: "10px !important",
+                            width: "20px !important",
+                            height: "20px !important"
+                        }} color='warning' />
+                    </div>
+                ) : (
                     !user.loggedIn ? "You are not loggedin !" :
                         <>
                             {user.loginid && <div><span style={styles.head}>LoginId:</span><span>{user.loginid}</span></div>}

@@ -9,7 +9,6 @@ import Table from "../Tables/ExamOffice/Eotable";
 
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 import NotAvailPage from "../NotAvailPage/NotAvailPage";
-import TableContainer from '../TableContainer/TableContainer';
 import TableHandler from '../TableHandler/TableHandler';
 
 const Login = React.lazy(() => import('../../pages/Login/Login'));
@@ -29,15 +28,14 @@ const NavigationStack = () => {
                 <Route path="/deptSelect" exact element={<DeptSelect />} />
                 <Route path="/adminDashboard" exact element={<AdminDashboard />} />
                 <Route path="/excel" exact element={<ExcelDownloadPage />} />
+                <Route path="/table/:deptName" exact element={<TableHandler />} />
 
+                {/* Devepolment Routes */}
                 <Route path="/hodphase2" exact element={<HODTable />} />
                 <Route path="/eophase3" exact element={<EOphase3 />} />
                 <Route path="/ecphase4" exact element={<ECphase4 />} />
-                ``
                 <Route path="/examoffice/table/:deptName" exact element={<Table />} />
                 <Route path="/department/table/:deptName" exact element={<DeptTable />} />
-
-                <Route path="/tableHandler/:id" exact element={<TableHandler />} />
 
                 <Route path="*" element={<NotAvailPage msg="Page Not Found !" />} />
             </Routes>

@@ -16,7 +16,7 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1, approval2
 
     const handleDeptBtnClick = (event, deptName) => {
         event.preventDefault();
-        navigator(`/examoffice/table/${deptName}`);
+        navigator(`/table/${deptName}`);
     }
 
     const handleApproval1Click = (event, deptName) => {

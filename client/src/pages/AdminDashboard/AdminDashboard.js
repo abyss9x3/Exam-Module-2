@@ -1,8 +1,16 @@
+import { Button } from '@mui/material';
 import React from 'react'
 
 const AdminDashboard = () => {
     return (
-        <div>AdminDashboard</div>
+        <section>
+            <div>AdminDashboard</div>
+            <Button
+                href='/signup'
+                variant='outlined'
+                color='warning'
+            >Add New User</Button>
+        </section>
     )
 }
 
