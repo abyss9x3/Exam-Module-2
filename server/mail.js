@@ -4,15 +4,22 @@ const nodemailer = require('nodemailer');
 let transporter = null;
 
 const connectNodeMailer = () => {
-    // create reusable transporter object using the default SMTP transport
-    transporter = nodemailer.createTransport({
-        port: 465,
-        host: "smtp.gmail.com",
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASSWORD,
-        },
-        secure: true,
+    return new Promise((resolve, reject) => {
+        try {
+            // create reusable transporter object using the default SMTP transport
+            transporter = nodemailer.createTransport({
+                port: 465,
+                host: "smtp.gmail.com",
+                auth: {
+                    user: process.env.MAIL_USER,
+                    pass: process.env.MAIL_PASSWORD,
+                },
+                secure: true,
+            });
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
     });
 }
 

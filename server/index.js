@@ -11,16 +11,10 @@ const path = require('path');
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
+const { connectDB } = require('./database');
+const { connectNodeMailer } = require('./mail');
 
 const { explore, user } = require('./routes');
-
-// Establish Connection to Database
-const { connectDB } = require('./database');
-connectDB();
-
-// Establish Connection for Nodemailer
-const { connectNodeMailer } = require('./mail');
-connectNodeMailer();
 
 // parse json request body
 app.use(express.json());
@@ -53,6 +47,19 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+
     console.log(`Server running on PORT ${PORT}`);
+
+    try {
+        // Establish Connection to Database
+        await connectDB();
+        // Establish Connection for Nodemailer
+        await connectNodeMailer();
+    } catch (error) {
+        console.error(error);
+    }
+
+}).on('error', error => {
+    console.error(`Failed to start server: ${error}`);
 });

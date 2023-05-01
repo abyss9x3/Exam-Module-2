@@ -1,3 +1,14 @@
+/*
+TODO: 
+    - replace createConnection with createPool for concurrency
+    - use startTransaction and commit for multiple query executions
+
+    waitForConnections: true,
+    connectionLimit: 10,
+    acquireTimeout: 30000
+*/
+
+
 const mysql = require('mysql2/promise');
 const { HOD, MEMBER, EXAMOFFICER, EXAMCONTROLLER } = require('./types');
 
