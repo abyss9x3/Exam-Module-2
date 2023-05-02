@@ -1,90 +1,127 @@
 const mysql = require('mysql2/promise');
-const { HOD, MEMBER, EXAMOFFICER, EXAMCONTROLLER } = require('./types');
+const path = require('path');
+const { exit } = require('process');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const pool = mysql.createPool({
-    connectionLimit: 10,
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+    database: process.env.DB_DATABASE,
+
+    waitForConnections: true,
+    connectionLimit: 10
 });
 
 const connectDB = async () => {
-    try {
-        await pool.query('SELECT 1 + 1 AS solution');
-        console.log("Database connected!");
-    } catch (error) {
-        console.error("Failed to connect to database:", error);
-    }
+    await pool.query('SELECT 1 + 1 AS solution');
+    console.log("Database connected!");
 }
 
-// Middleware to get a connection from the pool for each incoming request
-const getConnection = async (req, res, next) => {
-    try {
-        req.dbConnection = await pool.getConnection();
-        next();
-    } catch (error) {
-        console.error("Failed to get a database connection:", error);
-        res.status(500).send("Internal Server Error");
-    }
+const disconnectDB = async () => {
+    await pool.end();
+    console.log("Database disconnected!");
 }
 
-// Middleware to release the connection back to the pool after the request is completed
-const releaseConnection = async (req, res, next) => {
+/**
+ * @callback Queries
+ * @param {mysql.PoolConnection} connection
+ * @returns {Promise<>}
+ */
+
+/**
+ * Executes a transaction by calling the provided queries function with a MySQL connection,
+ * and commits or rolls back the transaction based on the success of the queries.
+ * 
+ * @param {Queries} queries - The queries to execute as a transaction
+ * @returns {Promise<void>} - Resolves if the transaction was successful, rejects if it failed
+ */
+const transactionWrapper = async queries => {
+    /** @type {mysql.PoolConnection} */
+    let connection = null;
     try {
-        if (req.dbConnection) {
-            req.dbConnection.release();
+        connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        const response = await queries(connection);
+
+        await connection.commit();
+        return response;
+    } catch (error) {
+        if (connection) {
+            await connection.rollback();
+            throw new Error(error.message);
+        } else {
+            throw new Error("Failed to get a database connection: " + error.message);
         }
-        next();
-    } catch (error) {
-        console.error("Failed to release the database connection:", error);
-        res.status(500).send("Internal Server Error");
+    } finally {
+        try {
+            if (connection) connection.release();
+        } catch (error) {
+            throw new Error("Failed to release the database connection: " + error.message);
+        }
     }
 }
 
-// User - Queries related to login/signup/deleteUser
-const createNewUser = async ({ name, loginid, password, designation, deptName }, conn) => {
-    const query = designation === HOD || designation === MEMBER
-        ? `INSERT INTO member(name, loginid, password,  designation, deptname) VALUES (?, ?, ?, ?, ?);`
-        : designation === EXAMOFFICER || designation === EXAMCONTROLLER
-            ? `INSERT INTO examoffice(name, loginid, password,  designation, deptname) VALUES (?, ?, ?, ?, ?);`
-            : null;
+const main = async () => {
+    try {
+        await connectDB();
 
-    if (!query) {
-        throw new Error('Invalid designation');
+        const res = await Promise.all([
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(2)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(1)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(3)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(3)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(5)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(3)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(5)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(3)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(3)");
+            }),
+            transactionWrapper(async connection => {
+                return await connection.execute("select sleep(5)");
+            })
+        ]);
+
+    } catch (error) {
+        console.log(error);
+    } finally {
+        await disconnectDB();
     }
-
-    const [result] = await conn.execute(query, [name, loginid, password, designation, deptName]);
-    return result.insertId;
 }
 
-// Example endpoint using the getConnection and releaseConnection middlewares
-app.post('/users', getConnection, async (req, res) => {
-    try {
-        const { name, loginid, password, designation, deptName } = req.body;
-        const userId = await createNewUser({ name, loginid, password, designation, deptName }, req.dbConnection);
-        res.status(201).json({ id: userId });
-    } catch (error) {
-        console.error("Failed to create a new user:", error);
-        res.status(500).send("Internal Server Error");
-    } finally {
-        releaseConnection(req, res);
+const Timer = name => {
+    const start = performance.now();
+    return {
+        stop: () => {
+            const end = performance.now();
+            const time = end - start;
+            console.log('Timer:', name, 'finished in', time, 'ms');
+        }
     }
-});
+};
 
-// Example transaction using the getConnection and releaseConnection middlewares
-app.post('/transactions', getConnection, async (req, res) => {
-    const conn = req.dbConnection;
-    try {
-        await conn.beginTransaction();
-        // Perform some queries here
-        await conn.commit();
-        res.status(200).send("Transaction succeeded");
-    } catch (error) {
-        console.error("Failed to execute a transaction:", error);
-        await conn.rollback();
-        res.status(500).send("Internal Server Error");
-    } finally {
-        releaseConnection(req, res);
-    }
-});
+const benchMark = async () => {
+    const timer = Timer("t1");
+    await main();
+    timer.stop();
+}
+
+benchMark().finally(exit);

@@ -2,10 +2,6 @@
 TODO: 
     - replace createConnection with createPool for concurrency
     - use startTransaction and commit for multiple query executions
-
-    waitForConnections: true,
-    connectionLimit: 10,
-    acquireTimeout: 30000
 */
 
 
@@ -35,7 +31,7 @@ const createNewUser = async ({ name, loginid, password, designation, deptName })
         await sqlDatabase.execute(`insert into examoffice(name, loginid, password,  designation, deptname) values ("${name}","${loginid}","${password}","${designation}","${deptName}");`);
     }
     else {
-        throw new ERROR('designation doesnot exist');
+        throw new Error('designation doesnot exist');
     }
 }
 
