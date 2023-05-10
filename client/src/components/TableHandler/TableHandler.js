@@ -35,7 +35,7 @@ const TableHandler = () => {
         return <Table4 deptName={deptName} />
     }
     // 5. EC in phase 4
-    else if (isUserExamController(user.designation) && (user.phase === 3 && user.phase === 4)) {
+    else if (isUserExamController(user.designation) && (user.phase === 3 || user.phase === 4)) {
         return <Table5 deptName={deptName} />
     }
     else {

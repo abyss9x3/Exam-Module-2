@@ -14,11 +14,12 @@ const DeptSelectUI = ({ loadingApproval, loadingSend, deptNames, showAppprovalBt
                     {deptNames && deptNames.map((deptName, id) =>
                         <div className={styles.btnContainer} key={id}>
                             <Button
-                                onClick={event => handleDeptBtnClick(event, deptName)}
-                                sx={{ width: "8rem" }}
                                 variant="outlined"
+                                sx={{ width: "8rem" }}
                                 color={(deptStatus && deptStatus[deptName]) ? "success" : "secondary"}
                                 endIcon={(deptStatus && deptStatus[deptName]) ? <DoneAll /> : null}
+                                onClick={event => handleDeptBtnClick(event, deptName)}
+                                disabled={!!(approval[deptName])}
                             >
                                 {deptName}
                             </Button>
@@ -26,9 +27,10 @@ const DeptSelectUI = ({ loadingApproval, loadingSend, deptNames, showAppprovalBt
                                 <Button
                                     variant="outlined"
                                     sx={{ marginLeft: "1.2rem", width: "9rem", }}
+                                    color='info'
                                     endIcon={loadingApproval && loadingApproval(deptName) ? <HourglassTop /> : ((approval[deptName]) ? <TaskAlt /> : <Send />)}
-                                    disabled={!!(approval[deptName])}
                                     onClick={event => handleApprovalClick(event, deptName)}
+                                    disabled={!!(approval[deptName])}
                                 >
                                     {(approval[deptName]) ? "Approved" : "Approve"}
                                 </Button>

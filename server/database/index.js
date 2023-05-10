@@ -46,6 +46,7 @@ const transactionWrapper = async queries => {
         await connection.commit();
         return response;
     } catch (error) {
+        console.log(error);
         if (connection) {
             await connection.rollback();
             throw new Error(error.message);
@@ -118,11 +119,12 @@ const getDeptTableWithoutExaminers = async deptName => transactionWrapper(async 
 
 const postDeptTableWithoutExaminers = async ({ tableData, deptName }) => transactionWrapper(async connection => {
     // tableData = [ { id, subNomenclature, subCode, template } ]
+    await connection.execute(`delete from ExamModule where DeptName="${deptName}"`);
+    if (!tableData || tableData.length === 0) return;
     let str = `("${tableData[0].id}", "${tableData[0].subNomenclature}", "${tableData[0].subCode}", ${tableData[0].template ? `"${tableData[0].template}"` : null}, "${deptName}")`;
     for (let i = 1; i < tableData.length; ++i) {
         str = `${str}, ("${tableData[i].id}", "${tableData[i].subNomenclature}", "${tableData[i].subCode}", ${tableData[i].template ? `"${tableData[i].template}"` : null}, "${deptName}")`
     }
-    await connection.execute(`delete from ExamModule where DeptName="${deptName}"`);
     await connection.execute(`insert into ExamModule (id, subNomenclature, subCode, template, DeptName) values ${str}`);
 });
 
@@ -152,7 +154,7 @@ const getDepartmentTableWithoutCommits = async deptName => transactionWrapper(as
     return rows;
 });
 
-const postExaminers = async tableData => transactionWrapper(async connection => {
+const postExaminers = async (connection, tableData) => {
     const examiner1 = tableData.map(data => ({ name: data.examiner1_name, email: data.examiner1_email, contactNo: data.examiner1_contactNo }));
     const examiner2 = tableData.map(data => ({ name: data.examiner2_name, email: data.examiner2_email, contactNo: data.examiner2_contactNo }));
 
@@ -164,17 +166,17 @@ const postExaminers = async tableData => transactionWrapper(async connection => 
 
     let str2 = `("${examiner2[0].name}", "${examiner2[0].email}", ${examiner2[0].contactNo})`;
     for (let i = 1; i < examiner2.length; ++i) {
+        str2 = `${str2}, ("${examiner2[i].name}", "${examiner2[i].email}", ${examiner2[i].contactNo})`
     }
-    str2 = `${str2}, ("${examiner2[i].name}", "${examiner2[i].email}", ${examiner2[i].contactNo})`
     await connection.execute(`insert into Examiner2 (name,email,contactNo) values ${str2}`);
-});
+}
 
 const postDepartmentTable = async ({ tableData, deptName }) => transactionWrapper(async connection => {
     // auto deletes all associated examiners with help of trigger
     // TODO: delete details of commit table also and if required re-enter
     await connection.execute(`delete from ExamModule where deptName="${deptName}"`);
 
-    await postExaminers(tableData);
+    await postExaminers(connection, tableData);
 
     let str = `("${tableData[0].id}", "${tableData[0].subNomenclature}", "${tableData[0].subCode}", ${tableData[0].template ? `"${tableData[0].template}"` : null}, "${tableData[0].examiner1_email}", "${tableData[0].examiner2_email}", ${tableData[0].syllabus ? `"${tableData[0].syllabus}"` : null},  "${deptName}")`;
     for (let i = 1; i < tableData.length; ++i) {

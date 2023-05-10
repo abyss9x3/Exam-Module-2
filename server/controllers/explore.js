@@ -7,8 +7,7 @@ const getDeptNames = async (req, res) => {
         const deptNames = await database.getDeptNames();
         return res.status(200).json(deptNames);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -20,8 +19,7 @@ const postDeptNames = async (req, res) => {
         await database.postDeptNames(req.query.deptNames);
         return res.status(200).json("The names of the departments have been updated.");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -33,8 +31,7 @@ const getDeptTableWithoutExaminers = async (req, res) => {
         const deptTableData = await database.getDeptTableWithoutExaminers(req.query.deptName);
         return res.status(200).json(deptTableData);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -46,8 +43,7 @@ const postDeptTableWithoutExaminers = async (req, res) => {
         await database.postDeptTableWithoutExaminers({ tableData: req.body.tableData, deptName: req.body.deptName });
         return res.status(200).json("Updates have been made to the department tables.");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -59,8 +55,7 @@ const getDepartmentTable = async (req, res) => {
         const deptTable = await database.getDepartmentTable(req.query.deptName);
         return res.status(200).json(deptTable);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -73,8 +68,7 @@ const postDepartmentTable = async (req, res) => {
         await database.postDepartmentTable({ tableData: req.body.tableData, deptName: req.body.deptName });
         return res.status(200).json("Updates have been made to the department tables.");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -86,8 +80,7 @@ const getDepartmentTableWithoutCommits = async (req, res) => {
         const deptTable = await database.getDepartmentTableWithoutCommits(req.query.deptName);
         return res.status(200).json(deptTable);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -103,8 +96,7 @@ const commitRow = async (req, res) => {
         });
         return res.status(200).json("The row data has been committed");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -116,8 +108,7 @@ const getDeptStatus = async (req, res) => {
         const deptStatus = await database.getDeptStatus(req.query.deptName);
         return res.status(200).json(deptStatus);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -128,8 +119,7 @@ const getAllDeptStatus = async (req, res) => {
         deptStatus.forEach(ele => newarr[ele.deptName] = ele.sentStatus);
         return res.status(200).json(newarr);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -142,8 +132,7 @@ const postDeptStatus = async (req, res) => {
         await database.postDeptStatus(req.query.deptName);
         return res.status(200).json("The department status has been updated.");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -155,8 +144,7 @@ const getApproval1 = async (req, res) => {
         const deptApproval1 = await database.getApproval1(req.query.deptName);
         return res.status(200).json(deptApproval1);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -167,8 +155,7 @@ const getAllApproval1 = async (req, res) => {
         approval1.forEach(ele => newobj[ele.deptName] = ele.approval1);
         return res.status(200).json(newobj);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -179,8 +166,7 @@ const getAllApproval2 = async (req, res) => {
         approval2.forEach(ele => newobj[ele.deptName] = ele.approval2);
         return res.status(200).json(newobj);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -193,8 +179,7 @@ const putApproval1 = async (req, res) => {
         await database.putApproval1(req.query.deptName);
         return res.status(200).json("Approved");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -206,8 +191,7 @@ const getApproval2 = async (req, res) => {
         const deptApproval2 = await database.getApproval2(req.query.deptName);
         return res.status(200).json(deptApproval2);
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -220,8 +204,7 @@ const putApproval2 = async (req, res) => {
 
         return res.status(200).json("Approved");
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -232,8 +215,7 @@ const sendAppointmentLetters = async (req, res) => {
 
         return res.status(200).json({ msg: "Sent appointment letters ! ", results });
     } catch (error) {
-        console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -252,7 +234,7 @@ const getExcellSheet = async (req, res) => {
         return res.status(200).send(csv_data);
     } catch (error) {
         console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -262,7 +244,7 @@ const clearDatabase = async (req, res) => {
         return res.status(200).json("Database cleared !");
     } catch (error) {
         console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 
@@ -274,7 +256,7 @@ const phase1End = async (req, res) => {
         res.status(200).json("Send Successfully ! Departments can now enter Examiner details for all subjects in the database, which contains all subject details for all departments.");
     } catch (error) {
         console.log(error);
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 }
 

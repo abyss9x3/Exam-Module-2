@@ -1,19 +1,29 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { Button, Box } from "@mui/material";
-import { AddCircle, Cancel, Delete, DoneAll, FileUpload, Send, UploadFile } from '@mui/icons-material';
+import {
+    FileOpen, AddCircle, Cancel, Delete,
+    DoneAll, FileUpload, Send, UploadFile, HourglassTop
+} from '@mui/icons-material';
 import LoadingSpinner from './../LoadingSpinner/LoadingSpinner';
 import { justFetch } from "../../hooks/useFetch";
 import { SERVER_LINK } from "../../dev-server-link";
+import userContext from '../../store/user/userContext';
 
 const TableContainer = ({ deptName, rows, setRows, loading, error, setError, show, editable, commitUrl }) => {
 
     const navigator = useNavigate();
+    const { getLoggedIn } = useContext(userContext);
 
     const [loadingStates, setLoadingStates] = useState({
         commitBtn: false, rowCommit: false, sendBtn: false
     });
+
+    // useEffect(() => {
+    //     console.log(rows);
+    //     console.log(JSON.stringify(rows));
+    // }, [rows]);
 
     const handleCommit = () => {
         if (loadingStates.commitBtn) return;
@@ -21,10 +31,15 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         justFetch(
             commitUrl,
             {
-                method: "POST", body: JSON.stringify({
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
                     deptName: deptName,
                     tableData: rows
-                })
+                }),
+
             },
             () => setLoadingStates(prev => ({ ...prev, commitBtn: true })),
             alert,
@@ -40,7 +55,11 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
             `${SERVER_LINK}/api/explore/deptStatus?deptName=${deptName}`,
             { method: "PUT" },
             () => setLoadingStates(prev => ({ ...prev, sendBtn: true })),
-            alert,
+            async msg => {
+                alert(msg);
+                await getLoggedIn();
+                navigator('/');
+            },
             setError,
             () => setLoadingStates(prev => ({ ...prev, sendBtn: false }))
         );
@@ -65,31 +84,69 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
     }
 
     const UploadFileComponent = useCallback((params, colName) => {
-        return <Button
-            sx={{ textTransform: "capitalize" }}
-            variant="outlined"
-            endIcon={params.row[colName] ? <UploadFile /> : < FileUpload />}
-            component="label"
-            color={params.row[colName] ? "success" : "info"}
-        >
-            {params.row[colName] ? "Change File" : "File"}
-            <input
-                hidden
-                type="file"
-                onChange={event => {
-                    const file = event.target.files[0];
-                    setRows(prev => prev.map((row) => {
-                        if (row.id === params.id) {
-                            row[colName] = file;
-                            return { ...row };
-                        } else {
-                            return row;
-                        }
-                    }));
-                }}
-            />
-        </Button >
-    }, [setRows]);
+        return (
+            <Box>
+                <Button
+                    sx={{ textTransform: "capitalize" }}
+                    variant="outlined"
+                    endIcon={params.row[colName] ? <UploadFile /> : < FileUpload />}
+                    component="label"
+                    color={params.row[colName] ? "success" : "info"}
+                    aria-label={params.row[colName] ? "Change File" : "Upload File"}
+                >
+                    {params.row[colName] ? "Change File" : "File"}
+                    <input
+                        hidden
+                        type="file"
+                        accept="application/pdf"
+                        onChange={event => {
+                            const file = event.target.files[0];
+                            // TODO: In Development
+                            alert("In development, this feature not available yet !");
+                            // const reader = new FileReader();
+                            // reader.onload = () => {
+                            //     const fileData = reader.result;
+                            //     const blob = new Blob([fileData], { type: 'application/pdf' });
+                            //     setRows(prev => prev.map((row) => {
+                            //         if (row.id === params.id) {
+                            //             row[colName] = blob;
+                            //             return { ...row };
+                            //         } else {
+                            //             return row;
+                            //         }
+                            //     }));
+                            // };
+                            // reader.readAsArrayBuffer(file);
+                        }}
+                    />
+                </Button >
+                {params.row[colName] &&
+                    <Button
+                        aria-label="View File"
+                        sx={{
+                            paddingLeft: "0px !important",
+                            paddingRight: "0px !important",
+                            minWidth: "unset",
+                            marginLeft: "6px"
+                        }}
+                        color="secondary"
+                        onClick={() => {
+                            const blob = params.row[colName];
+                            console.log(blob)
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.target = "_blank";
+                            document.body.appendChild(link);
+                            link.click();
+                        }}
+                    >
+                        <FileOpen />
+                    </Button>
+                }
+            </Box>
+        );
+    }, []);
 
     const handleAddRow = () => {
         // TODO: newId should be max of id + 1
@@ -148,8 +205,9 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
         show.includes("T") && colArr.push({
             field: "template",
             headerName: "Template",
-            width: 150,
-            editable: editable.includes("T"),
+            width: 180,
+            align: 'center',
+            editable: false,
             renderCell: params => UploadFileComponent(params, 'template')
         })
 
@@ -157,7 +215,7 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
             field: "syllabus",
             headerName: "Syllabus",
             width: 150,
-            editable: editable.includes("SYLL"),
+            editable: false,
             renderCell: params => UploadFileComponent(params, 'syllabus')
         })
 
@@ -244,6 +302,9 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
                     },
                     "& .MuiDataGrid-cell": {
                         borderRight: "1px solid rgba(224, 224, 224, 1)"
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                        minHeight: "100px"
                     }
                 }}
                 rows={rows}
@@ -286,7 +347,8 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
                     color="success"
                     sx={btnStyles}
                     onClick={handleCommit}
-                    endIcon={<DoneAll />}
+                    endIcon={loadingStates.commitBtn ? <HourglassTop /> : <DoneAll />}
+                    disabled={!!loadingStates.commitBtn}
                 >
                     Commit
                 </Button>}
@@ -304,7 +366,8 @@ const TableContainer = ({ deptName, rows, setRows, loading, error, setError, sho
                     color="secondary"
                     sx={btnStyles}
                     onClick={handleSend}
-                    endIcon={<Send />}
+                    endIcon={loadingStates.sendBtn ? <HourglassTop /> : <Send />}
+                    disabled={!!loadingStates.sendBtn}
                 >
                     Send
                 </Button>}

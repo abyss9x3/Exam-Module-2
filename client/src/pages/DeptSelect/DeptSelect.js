@@ -79,6 +79,8 @@ const DeptSelectComponent = ({ deptNames, deptStatus, user, approval1, approval2
         event.preventDefault();
 
         if (loading.send) return;
+        if (!window.confirm("Are you sure ? This action will send tables to respective departments and examiner filling process will start !")) return;
+
         setLoading(prev => {
             prev.send = true;
             return { send: prev.send, approval1: { ...prev.approval1 }, approval2: { ...prev.approval2 } }
