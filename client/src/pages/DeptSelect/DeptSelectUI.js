@@ -19,7 +19,7 @@ const DeptSelectUI = ({ loadingApproval, loadingSend, deptNames, showAppprovalBt
                                 color={(deptStatus && deptStatus[deptName]) ? "success" : "secondary"}
                                 endIcon={(deptStatus && deptStatus[deptName]) ? <DoneAll /> : null}
                                 onClick={event => handleDeptBtnClick(event, deptName)}
-                                disabled={!!(approval[deptName])}
+                                disabled={!!(approval && approval[deptName])}
                             >
                                 {deptName}
                             </Button>
