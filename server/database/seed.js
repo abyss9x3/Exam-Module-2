@@ -107,17 +107,17 @@ delete from ExamSubCommittee;
 insert into ExamSubCommittee (deptName) values ("IT"), ("CS");
 
 insert into Member (loginid, password, name, designation, deptName) values 
-("mit1", "pass", "Shuja", "hod", "IT"),
-("mit2", "pass", "Shumkla", "member", "IT"), 
-("mit3", "pass", "Aman", "member", "IT"), 
-("mcs1", "pass", "Anshul", "hod", "CS"), 
-("mcs2", "pass", "Satyam", "member", "CS"), 
-("mcs3", "pass", "Raj", "member", "CS");
+("mit1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shuja", "hod", "IT"),
+("mit2", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shumkla", "member", "IT"), 
+("mit3", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Aman", "member", "IT"), 
+("mcs1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Anshul", "hod", "CS"), 
+("mcs2", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Satyam", "member", "CS"), 
+("mcs3", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Raj", "member", "CS");
 
 insert into ExamOffice (loginid, password, name, designation) values 
 ("admin", "$2a$10$vk0UI6uB4ZEPcubspqCGhO4ebmjdaXYRXab4slfXcUFVUYGqAbL/K", "Admin", "admin"), 
-("officer", "pass", "Officer", "examcontroller"),
-("controller", "pass", "Controller", "examofficer");
+("officer", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Officer", "examofficer"),
+("controller", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Controller", "examcontroller");
 
 insert into Examiner1 (email, name, contactNo) values
 ("e1it1", "E1IT1", "9999999911"),
