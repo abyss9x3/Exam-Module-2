@@ -78,8 +78,8 @@ CREATE TABLE Commits
   member VARCHAR(100) NOT NULL,
   examModuleID VARCHAR(10) NOT NULL,
   PRIMARY KEY (examModuleID),
-  FOREIGN KEY (member) REFERENCES Member(loginid),
-  FOREIGN KEY (examModuleID) REFERENCES ExamModule(id)
+  FOREIGN KEY (member) REFERENCES Member(loginid) ON DELETE CASCADE,
+  FOREIGN KEY (examModuleID) REFERENCES ExamModule(id) ON DELETE CASCADE
 );
 
 delimiter |
@@ -104,7 +104,7 @@ delete from ExamOffice;
 delete from Member;
 delete from ExamSubCommittee;
 
-insert into ExamSubCommittee (deptName) values ("IT"), ("CS");
+insert into ExamSubCommittee (deptName) values ("IT"), ("CS"), ("EE"), ("EC"), ("ME"), ("CE");
 
 insert into Member (loginid, password, name, designation, deptName) values 
 ("mit1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shuja", "hod", "IT"),
@@ -133,6 +133,10 @@ insert into Examiner2 (email, name, contactNo) values
 
 insert into Approval (deptName, approval1, approval2, sentStatus) values
 ("IT", 0, 0, 0),
+("EE", 0, 0, 0),
+("EC", 0, 0, 0),
+("ME", 0, 0, 0),
+("CE", 0, 0, 0),
 ("CS", 0, 0, 0);
 
 insert into ExamModule (id, subNomenclature, subCode, deptName, examiner1, examiner2) values
