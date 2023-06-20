@@ -130,7 +130,7 @@ const Table4 = ({ deptName }) => {
         <TableContainer
             show={[
                 "T", "SYLL", "E1", "E2",
-                "commitBtn"
+                "commitBtn", "addBtn", "deleteBtn"
             ]}
             editable={[
                 'SC', 'SN', 'T', 'SYLL', 'E1', 'E2'

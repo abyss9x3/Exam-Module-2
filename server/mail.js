@@ -54,7 +54,7 @@ const sendApprovalLetters = async (allExaminers) => {
         })
     });
 
-    return await Promise.all(promiseArray);
+    return await Promise.allSettled(promiseArray);
 }
 
 module.exports = {
