@@ -1,7 +1,13 @@
 # Exam Module 2
+ Developed a robust web based system to automate the examiner allocation process of various departments 
+within our college.
+ Implemented various functionalities like: mailing system, file storage and authentication/ authorization 
+mechanisms to streamline the flow of system’s working.
+ Collaborated effectively in a team environment using GIT for project management and version control.
+ Built a responsive and smooth frontend using React JS and integrated it with backend using Node JS and 
+express JS. Also used SQL for efficient and secure data storage and retrieval wherever needed. 
 
-Submitted by:
-
+Developed by:
 - AMAN ARYA (0801IT201010)
 - PRATHMESH BANSAL (0801IT201067)
 - SARTHAK MODHE (0801IT201078)
@@ -11,9 +17,7 @@ Submitted by:
 - YASHRAJ SOLANKI (0801IT201101)
 
 Mentored by:
-
 - DR.  LALIT PUROHIT
-- MR. UPENDRA SINGH
 
 ## Code Importing
 
