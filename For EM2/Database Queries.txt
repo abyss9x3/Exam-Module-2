@@ -1,0 +1,53 @@
+DataBase Queries :
+
+initially {
+	insert DeptName in ApprovalTable and set all other fields=false
+      insert all department names in ExamSubCommiteeTable 
+}
+
+API to Database Queries
+
+1. get pass where username is loginid
+
+2. store loginid & pass in EO/EC/M/HOD
+
+3. get id,SC,SN,T from EMTable where dept=deptName
+
+4. delete rows where dept=deptName
+   insert rows in EMTable with tableData
+
+5. get all cols from EMTable where dept=deptName
+   use join - get all cols from CommitTable where EMT.id=commit.EMID
+   populate Emaxiner 1&2 's FK (join)
+
+6. check if primarykey=id exists in database
+   if exists :
+        delete from EMTable where id=id
+        delete all Examiner 1&2 which have FK in above EMTable row
+   insert Examiner 1&2 with data 
+   insert data in EMTable Row where id=id
+   insert id, memberId in Commit Table
+
+7. delete rows where dept=deptName
+   delete all Examiner 1&2 which have FK in above EMTable rows
+   insert Examiner 1&2 with data 
+   insert rows in EMTable with tableData
+
+8. update in ApprovalTable set SendStatus=true, where dept=deptName
+
+9. update in ApprovalTable set approval1=true, where dept=deptName
+
+10. update in ApprovalTable set approval2=true, where dept=deptName
+
+11. get all data from EMTable
+
+12. clear EMTable
+    clear CommitTable
+    reset ApprovalTable
+    clear Examiner 1&2
+
+13. get * from ExamSubCommittee
+
+
+
+
