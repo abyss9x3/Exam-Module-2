@@ -116,7 +116,7 @@ const authorizationHandler = authorizedUsersList => {
             const designation = req.designation.toLowerCase();
             if (!designation || designation !== ADMIN && (!authorizedUsersList.includes(designation)))
                 throw new Error("This designation is not authorized");
-            // for Members and HODs
+            // for Members and HODs -> department level access
             if ([HOD, MEMBER].includes(designation)) {
                 const deptName = (req.query && req.query.deptName) || (req.body && req.body.deptName);
                 if (req.deptName !== deptName) throw new Error("This action is not authorized by this Department");

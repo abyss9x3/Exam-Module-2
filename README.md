@@ -10,21 +10,11 @@ express JS. Also used SQL for efficient and secure data storage and retrieval wh
 
 Developed by:
 
-- AMAN ARYA (0801IT201010)
-- PRATHMESH BANSAL (0801IT201067)
-- SARTHAK MODHE (0801IT201078)
-- SHREYANSH SHUKLA (0801IT201081)
-- SHUJA UDDIN QURESHI (0801IT201086)
-- UNNATI GUPTA (0801IT201094)
-- YASHRAJ SOLANKI (0801IT201101)
+- ADITYA SHARMA
+- AMAN ARYA 
+- SHREYANSH SHUKLA 
+- SHUJA UDDIN QURESHI 
 
-Mentored by:
-
-- DR.  LALIT PUROHIT
-
-## Code Importing
-
-Open the destination folder in the terminal and just type `git clone https://github.com/SGSITS-Exam-Module-2/Exam-Module-2.git` command.
 
 ## Running the Server
 

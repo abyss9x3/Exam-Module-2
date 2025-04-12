@@ -107,10 +107,10 @@ delete from ExamSubCommittee;
 insert into ExamSubCommittee (deptName) values ("IT"), ("CS"), ("EE"), ("EC"), ("ME"), ("CE");
 
 insert into Member (loginid, password, name, designation, deptName) values 
-("mit1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shuja", "hod", "IT"),
-("mit2", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shumkla", "member", "IT"), 
-("mit3", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Aman", "member", "IT"), 
-("mcs1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Anshul", "hod", "CS"), 
+("mit1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Aditya", "hod", "MINING"),
+("mit2", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shumkla", "member", "ECE"), 
+("mit3", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Shuja", "member", "CIVIL"), 
+("mcs1", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Aman", "hod", "CS"), 
 ("mcs2", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Satyam", "member", "CS"), 
 ("mcs3", "$2a$10$jgVSNXNltYzQSWdWqri6S.CBJwPMMhiDGlHI/NDXhC6XImMNCjYbO", "Raj", "member", "CS");
 
