@@ -1,0 +1,22 @@
+.uiSection {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading {
+    padding: 1.5rem;
+}
+
+.btnContainer {
+    margin: 0.4rem 0;
+    display: flex;
+    justify-content: flex-start;
+}

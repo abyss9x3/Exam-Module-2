@@ -1,0 +1,12 @@
+.App {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-align: center;
+    height: auto !important;
+}
+
+.mainContainer {
+    position: relative;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
